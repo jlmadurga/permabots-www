@@ -12,8 +12,10 @@ django-test-plus==1.0.12
 factory_boy==2.6.1
 django-webtest==1.7.8
 mock==1.3.0
+django-silk==0.5.7
 
 # pytest!
 pytest-django==2.9.1
 pytest-sugar==0.5.1
+
 
