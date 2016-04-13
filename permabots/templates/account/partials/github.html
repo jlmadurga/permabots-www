@@ -1,0 +1,20 @@
+{% load i18n %}
+{% load account %}
+{% load socialaccount %}
+
+{% get_providers as socialaccount_providers %}
+
+      {% if socialaccount_providers %}
+
+			<h4 style="margin-bottom: 15px;">or Login with:</h4>
+
+	
+      
+      {% for provider in socialaccount_providers %}
+			<a href="{% provider_login_url provider.id process=login scope=scope auth_params=auth_params %}" class="social-icon si-colored si-github divcenter" title="Github">
+							<i class="icon-github-circled"></i>
+							<i class="icon-github-circled"></i>
+			</a>
+		{% endfor %}
+
+      {% endif %}

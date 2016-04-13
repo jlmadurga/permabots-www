@@ -1,0 +1,40 @@
+{% extends "bots/base/list.html" %}
+{% load staticfiles i18n %}
+
+{% block list_title %}{% trans "Bots" %}{% endblock %}
+
+{% block datatable_id %}datatable-bots{% endblock %}
+
+				{% block columns %}
+					<th>Token</th>
+					<th>Id</th>
+					<th>Firstname</th>
+					<th>Username</th>
+				{% endblock %}
+				
+				{% block name %}<a href="{% url 'bot-detail' object.pk %}">{{ object.user_api.first_name }}</a>{% endblock %}
+
+{% block rows %}
+					<td>{{ object.token }}</td>
+					<td>{{ object.user_api.id }}</td>
+					<td>{{ object.user_api.first_name }}</td>
+					<td>{{ object.user_api.username }}</td>
+{% endblock %}
+
+{% block extra_actions %}
+<li><a href="{% url 'handler-list' object.pk %}">Handlers</a></li>
+<li><a href="{% url 'hook-list' object.pk %}">Hooks</a></li>
+{% endblock %}
+
+{% block url_detail %}{% url 'bot-detail' object.pk %}{% endblock %}
+
+{% block url_delete %}{% url 'bot-delete' object.pk %}{% endblock %}
+
+{% block url_update %}{% url 'bot-update' object.pk %}{% endblock %}
+
+{% block url_create %}{% url 'bot-create' %}{% endblock %}
+
+{% block create_msg %}Create new bot{% endblock %}
+
+{% block datatable_id_js %}#datatable-bots{% endblock %}
+

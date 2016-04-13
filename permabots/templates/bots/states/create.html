@@ -1,0 +1,9 @@
+{% extends "bots/base/create.html" %}
+{% load staticfiles i18n %}
+{% load crispy_forms_tags %}
+
+
+{% block element %}{% trans "Create State" %}{% endblock %}
+
+{% block redirect_back %}{% url 'bot-detail' bot.pk %}{% endblock %}
+

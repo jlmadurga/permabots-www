@@ -1,0 +1,12 @@
+{% extends "bots/base/base.html" %}
+{% load staticfiles i18n %}
+{% load crispy_forms_tags %}
+
+{% block panel_width %}style="max-width: 500px;"{% endblock %}
+
+{% block form_content %}
+    {% crispy form %}
+    <input class="button button-small button-border button-rounded" type="submit" value="Update" />
+    <a href="{% block redirect_back %}{% endblock %}" class="button button-small button-border button-rounded">Cancel</a>    		
+{% endblock %}
+

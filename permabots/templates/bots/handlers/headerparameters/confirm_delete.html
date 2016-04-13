@@ -1,0 +1,7 @@
+{% extends "bots/base/confirm_delete.html" %}
+{% load staticfiles i18n %}
+
+
+{% block element %}{% trans "Delete Header Parameter" %} <span class="label label-primary leftmargin-sm">{{ object.key }}</span>{% endblock %}
+
+{% block redirect_back %}{% url 'handler-detail' bot.pk handler.pk %}{% endblock %}

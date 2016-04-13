@@ -1,0 +1,21 @@
+{% extends "bots/base/edit.html" %}
+{% load staticfiles i18n %}
+
+{% block panel_width %}{% endblock %}
+{% block element %}{% trans "Update Handler" %}<span class="label label-primary leftmargin-sm">{{ object.name }}</span>{% endblock %}
+
+{% block redirect_back %}{% url 'handler-list' bot.pk %}{% endblock %}
+
+{% block extra_scripts %}
+	{{ block.super }}
+	<script>
+			$(function() {
+			$( "#processTabs" ).tabs({ show: { effect: "fade", duration: 400 } });
+			$( ".tab-linker" ).click(function() {
+				$( "#processTabs" ).tabs("option", "active", $(this).attr('rel') - 1);
+				return false;
+			});
+		});
+	</script>
+
+{% endblock %}

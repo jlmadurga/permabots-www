@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{% block head_title %}{% endblock head_title %}{% endblock title %}
+
+
+{% block content %}
+<div class="divcenter nobottommargin clearfix" id="tab-login-register" style="max-width: 500px;">
+	<div class="panel panel-default nobottommargin">
+		<div class="panel-body" style="padding: 40px;">
+		{% block accounts_content %}
+		{% endblock %}
+		</div>
+	</div>
+</div>								
+
+{% endblock content %}

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block content %}
+	<h3><i>{{ object }}</i>{% if object.enabled %}<span class="label label-success leftmargin-sm"> {% trans "On" %}</span> {% else %}<span class="label label-danger leftmargin-sm"> {% trans "Off" %}</span> {% endif %}
+	<div class="fright">
+		<a href="{% url 'bot-update' object.pk %}" class="button button-small button-border button-rounded"><i class="icon-edit"> Update</i></a>
+		<a href="{% url 'bot-delete' object.pk %}" class="button button-small button-border button-rounded"><i class="icon-remove"> Delete</i></a>
+	</div>
+	</h3>
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Telegram Info" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<ul class="list-group">
+					<li class="list-group-item"><b>Token</b><span class="badge">{{ object.token }}</span></li>
+					<li class="list-group-item"><b>Username</b><div class="fright">{{ object.user_api.username }}</div></li>
+					<li class="list-group-item"><b>First Name</b> <div class="fright">{{ object.user_api.first_name }}</div></li>
+					<li class="list-group-item"><b>Id</b><div class="fright">{{ object.user_api.id }}</div></li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Environment Variables" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<ul class="list-group">
+					{% for var in object.env_vars.all %}
+						<li class="list-group-item">{{ var.key }} 
+						<div class="fright ">
+							<a href="{% url 'env-update' object.pk var.pk %}"><i class="i-plain i-small icon-edit"></i></a><a href="{% url 'env-delete' object.pk var.pk %}"><i class="i-plain i-small icon-remove"></i></a>
+						
+
+						</div>
+						<div class="fright rightmargin-sm">
+						{{ var.value}}   
+						</div>
+
+						</li>
+					{% endfor %}
+				</ul>
+				<a href="{% url 'env-create' object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>
+			</div>
+
+		</div>
+	</div>
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "States" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<ul class="list-group">
+					{% for state in object.states.all %}
+						<li class="list-group-item">{{ state.name }} 
+						<div class="fright ">
+							<a href="{% url 'state-update' object.pk state.pk %}"><i class="i-plain i-small icon-edit"></i></a><a href="{% url 'state-delete' object.pk state.pk %}"><i class="i-plain i-small icon-remove"></i></a>
+						</div>
+
+						</li>
+					{% endfor %}
+				</ul>
+				<a href="{% url 'state-create' object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>
+			</div>
+
+		</div>
+	</div>
+	
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Handlers" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<a href="{% url 'handler-list' object.pk %}" class="button button-small button-border button-rounded"> {% trans "View" %}</a>
+			</div>
+
+		</div>
+	</div>
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Hooks" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<a href="{% url 'hook-list' object.pk %}" class="button button-small button-border button-rounded"> {% trans "View" %}</a>
+			</div>
+
+		</div>
+	</div>
+	
+
+	<div class="fright">
+		<a href="{% url 'bot-update' object.pk %}" class="button button-small button-border button-rounded"><i class="icon-edit"> Update</i></a>
+		<a href="{% url 'bot-delete' object.pk %}" class="button button-small button-border button-rounded"><i class="icon-remove"> Delete</i></a>
+	</div>		
+
+{% endblock %}
+
+

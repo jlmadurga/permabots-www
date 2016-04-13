@@ -1,0 +1,8 @@
+{% extends "bots/base/edit.html" %}
+{% load staticfiles i18n %}
+
+
+
+{% block element %}{% trans "Update Bot" %}<span class="fright label label-primary leftmargin-sm">{{ object }}</span>{% endblock %}
+
+{% block redirect_back %}{% url 'bot-detail' object.pk %}{% endblock %}

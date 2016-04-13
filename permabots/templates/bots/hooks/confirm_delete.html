@@ -1,0 +1,6 @@
+{% extends "bots/base/confirm_delete.html" %}
+{% load staticfiles i18n %}
+
+{% block element %}{% trans "Delete Hook" %} <span class="label label-primary leftmargin-sm">{{ object.name }}</span>{% endblock %}
+
+{% block redirect_back %}{% url 'hook-list' object.bot.pk %}{% endblock %}

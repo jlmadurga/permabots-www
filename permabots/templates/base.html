@@ -1,0 +1,141 @@
+{% load staticfiles i18n %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	 <meta name="created" content="{% now "jS M Y h:i" %}" />
+	<meta name="author" content="Permabots" />
+	<meta name="description" content="Create chatbots for messenger services. Connect bot to APIs. For free. Telegram, Whatsapp, Slack."/>
+	<meta name="keywords" content="bot,chatbot,telegram,messenger,web services,api,free,slack,whatsapp,"/>
+	<link rel="shortcut icon" href="{% static "images/favicon.ico" %}" />
+	<link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="{% static "css/bootstrap.css" %}" type="text/css" />
+	<link rel="stylesheet" href="{% static "style.css" %}" type="text/css" />
+	<link rel="stylesheet" href="{% static "css/swiper.css" %}" type="text/css" />
+	<link rel="stylesheet" href="{% static "css/dark.css" %}" type="text/css" />
+	<link rel="stylesheet" href="{% static "css/font-icons.css" %}" type="text/css" />
+	<link rel="stylesheet" href="{% static "css/animate.css" %}" type="text/css" />
+	<link rel="stylesheet" href="{% static "css/magnific-popup.css" %}" type="text/css" />
+	{% block extra_css %}{% endblock %}
+
+	<link rel="stylesheet" href="{% static "css/responsive.css" %}" type="text/css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!--[if lt IE 9]>
+		<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+	<![endif]-->
+
+	<title>{% block title %}Permabots{% endblock %}</title>
+
+	{% include "partials/google_analytics.html" %}
+
+</head>
+
+<body class="stretched {% if request.user.is_authenticated %}side-push-panel{% endif %}">
+
+	{% if request.user.is_authenticated %}
+		{% include "partials/side_panel.html" %}		
+	{% endif %}
+
+
+	<div id="wrapper" class="clearfix">
+
+		<header id="header" class="transparent-header border-full-header full-header {% block sticky_header %}sticky-header{% endblock %} {% block dark %}{% endblock %}" data-sticky-class="not-dark">
+
+			<div id="header-wrap">
+
+				<div class="container clearfix">
+				
+
+
+					<div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
+
+					<div id="logo">
+						<a href="{% url 'home' %}" class="standard-logo" data-dark-logo="{% static "images/logo-dark.png" %}" data-sticky-logo="{% static "images/logo_mini.png" %}"><img src="{% static "images/logo.png" %}" alt="Permabots logo"></a>
+						<a href="{% url 'home' %}" class="retina-logo" data-dark-logo="{% static "images/logo-dark@2x.png" %}" data-sticky-logo="{% static "images/logo_mini@2x.png" %}"><img src="{% static "images/logo@2x.png" %}" alt="Permabots Logo"></a>
+					</div>
+					
+					<nav id="primary-menu" class="dark">
+
+						<ul>
+							{% block pre_extra_nav %}
+							{% endblock %}
+							<li><a href="{% url 'getting-started' %}"><div>Getting Started</div></a></li>
+							<li><a href="{% url 'swagger:django.swagger.base.view' %}"><div>API</div></a></li>
+						</ul>
+						{% if request.user.is_authenticated %}
+						<div id="side-panel-trigger" class="side-panel-trigger"><a href="#"><i class="icon-reorder"></i></a></div>
+						{% else %}
+						<ul>
+							<li><a href="{% url 'account_signup' %}"><div>Sign Up</div></a></li>
+						</ul>
+						<ul>
+							<li><a href="{% url 'account_login' %}"><div>Sign In</div></a></li>
+						</ul>
+						{% endif %}	
+	
+		
+					</nav>
+					
+				</div>
+			</div>
+		</header>
+		
+		{% block pre_content %}
+		
+		{% endblock %}
+		
+		<section id="content">
+
+			<div class="content-wrap">
+
+				<div class="container clearfix">
+				     	{% if messages %}
+          					{% for message in messages %}
+          					<div class="alert-message" data-notify-type="{{ message.tags }}" data-notify-msg="<i class=icon-{{ message.tags}}-sign></i>{{ message }}">
+          					{% endfor %}
+     					 {% endif %}
+
+					{% block content %}
+					
+					{% endblock %}
+					
+					
+
+				</div>
+
+			</div>
+
+		</section>
+		
+	</div>
+	
+	<footer id="footer" class="dark">
+		{% include "partials/footer.html" %}
+	</footer>
+	
+</div>
+	
+	{% block modal %}{% endblock modal %}
+
+	<div id="gotoTop" class="icon-angle-up"></div>
+
+	<script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/plugins.js" %}"></script>
+
+	<script type="text/javascript" src="{% static "js/functions.js" %}"></script>
+	<script>
+		if ($('.alert-message').length > 0) {
+			SEMICOLON.widget.notifications($('.alert-message'));		
+		}				
+	</script>
+	{% block extra_scripts %}
+	{% endblock %}
+	
+</body>
+</html>
+	
+
+
+
+

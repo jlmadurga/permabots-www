@@ -1,0 +1,18 @@
+{% load staticfiles i18n %}
+			<div id="copyrights">
+
+				<div class="container clearfix">
+
+					<div class="col_half">
+						<img src="{% static "images/logo-dark.png" %}" alt="Footer Logo" class="footer-logo">
+						Copyrights &copy; 2016. Permabots. All Rights Reserved.						
+					</div>
+					<div class="col_half col_last tright">
+						<div class="copyrights-menu copyright-links fright clearfix">
+							<a href="{% url 'home' %}">Home</a>/<a href="{% url 'getting-started' %}">Getting Started</a>/<a href="{% url 'swagger:django.swagger.base.view' %}">API</a>/<a href="{% url 'account_login' %}">SignIn</a>/<a href="{% url 'account_signup' %}">SignUp</a>/<a href="mailto:contact@permabots.com">Email/<a href="http://www.stefanozanvit.com" target="_blank">Art work</a>
+						</div>
+					</div>
+
+				</div>
+
+			</div><

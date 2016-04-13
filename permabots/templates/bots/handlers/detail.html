@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block content %}
+	<h3><i>{{ object.bot }}</i> handler <i>{{ object.name }}</i>{% if object.enabled %}<span class="label label-success leftmargin-sm"> {% trans "On" %}</span> {% else %}<span class="label label-danger leftmargin-sm"> {% trans "Off" %}</span> {% endif %}
+	<div class="fright">
+		<a href="{% url 'handler-update' object.bot.pk object.pk %}" class="button button-small button-border button-rounded"><i class="icon-edit"> Update</i></a>
+		<a href="{% url 'handler-delete' object.bot.pk object.pk %}" class="button button-small button-border button-rounded"><i class="icon-remove"> Delete</i></a>
+	</div>
+	</h3>
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Info" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<ul class="list-group">
+					<li class="list-group-item"><b>Name</b><div class="fright">{{ object.name }}</div></li>
+					<li class="list-group-item"><b>Pattern</b><div class="fright">{{ object.pattern }}</div></li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "States" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<ul class="list-group">
+					<li class="list-group-item"><b>Source States</b><div class="fright">{% for state in object.source_states.all %}{{ state.name }} {% endfor %}</div></li>
+					<li class="list-group-item"><b>Target State</b><div class="fright">{{ object.feature_state }}</div></li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Request" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<ul class="list-group">
+					<li class="list-group-item"><b>Url template</b><div class="fright">{{ object.request.url_template }}</div></li>
+					<li class="list-group-item"><b>Method</b><div class="fright">{{ object.request.method }}</div></li>
+					<li class="list-group-item"><b>Data</b> <div class="fright">{{ object.request.data }}</div></li>
+				</ul>
+				{% if object.request %}
+				<div class="container clearfix">
+					
+					<div class="col_one_sixth topmargin-sm nobottommargin">
+						<b>{% trans "Url Parameters" %}</b>
+					</div>
+					<div class="col_two_fifth nobottommargin col_last">
+						<ul class="list-group">
+						{% for url_param in object.request.url_parameters.all %}
+							<li class="list-group-item">
+								{{ url_param.key }} 
+								<div class="fright ">
+									<a href="{% url 'handler-urlparameter-update' bot.pk object.pk url_param.pk %}"><i class="i-plain i-small icon-edit"></i></a>
+									<a href="{% url 'handler-urlparameter-delete' bot.pk object.pk url_param.pk %}"><i class="i-plain i-small icon-remove"></i></a>
+								</div>
+								<div class="fright rightmargin-sm">{{ url_param.value_template}}   
+								</div>
+							</li>
+						{% endfor %}
+						<a href="{% url 'handler-urlparameter-create' bot.pk object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>
+						</ul>
+					</div>
+				</div>
+				<div class="container clearfix">
+
+					<div class="col_one_sixth topmargin-sm nobottommargin">
+						<b>{% trans "Header Parameters" %}</b>
+					</div>
+					<div class="col_two_fifth nobottommargin col_last">
+						<ul class="list-group">
+						{% for header_param in object.request.header_parameters.all %}
+							<li class="list-group-item">
+								{{ header_param.key }} 
+								<div class="fright ">
+									<a href="{% url 'handler-headerparameter-update' bot.pk object.pk header_param.pk %}"><i class="i-plain i-small icon-edit"></i></a>
+									<a href="{% url 'handler-headerparameter-delete' bot.pk object.pk header_param.pk %}"><i class="i-plain i-small icon-remove"></i></a>
+								</div>
+								<div class="fright rightmargin-sm">{{ header_param.value_template}}   
+								</div>
+							</li>
+						{% endfor %}
+						<a href="{% url 'handler-headerparameter-create' bot.pk object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>
+						</ul>
+					</div>
+				</div>
+				{% endif %}
+			</div>
+
+		</div>
+	</div>
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Response" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<ul class="list-group">
+					<li class="list-group-item"><b>Text tempate</b><div class="fright">{{ object.response.text_template }}</div></li>
+					<li class="list-group-item"><b>Keyboard template</b><div class="fright">{{ object.response.keyboard_template }}</div></li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	
+
+	<div class="fright">
+		<a href="{% url 'handler-update' object.bot.pk object.pk %}" class="button button-small button-border button-rounded"><i class="icon-edit"> Update</i></a>
+		<a href="{% url 'handler-delete' object.bot.pk object.pk %}" class="button button-small button-border button-rounded"><i class="icon-remove"> Delete</i></a>
+	</div>		
+
+{% endblock %}
+
+

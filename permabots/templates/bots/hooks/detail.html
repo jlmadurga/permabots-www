@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block content %}
+	<h3><i>{{ object.bot }}</i> hook <i>{{ object.name }}</i>{% if object.enabled %}<span class="label label-success leftmargin-sm"> {% trans "On" %}</span> {% else %}<span class="label label-danger leftmargin-sm"> {% trans "Off" %}</span> {% endif %}
+		<div class="fright">
+		<a href="{% url 'hook-update' object.bot.pk object.pk %}" class="button button-small button-border button-rounded"><i class="icon-edit"> Update</i></a>
+		<a href="{% url 'hook-delete' object.bot.pk object.pk %}" class="button button-small button-border button-rounded"><i class="icon-remove"> Delete</i></a>
+	</div>		
+	
+	</h3>
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Info" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<ul class="list-group">
+					<li class="list-group-item"><b>Name</b><div class="fright">{{ object.name }}</div></li>
+					<li class="list-group-item"><b>Url Key</b><div class="fright">http://www.permabots.com/hooks/{{ object.key }}</div></li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	
+
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Response" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<ul class="list-group">
+					<li class="list-group-item"><b>Text template</b><div class="fright">{{ object.response.text_template }}</div></li>
+					<li class="list-group-item"><b>Keyboard template</b><div class="fright">{{ object.response.keyboard_template }}</div></li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Recipients" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<ul class="list-group">
+					{% for recipient in object.recipients.all %}
+						<li class="list-group-item"><b>name:chat_id</b>
+						<div class="fright ">
+									<a href="{% url 'hook-recipient-update' bot.pk object.pk recipient.pk %}"><i class="i-plain i-small icon-edit"></i></a>
+									<a href="{% url 'hook-recipient-delete' bot.pk object.pk recipient.pk %}"><i class="i-plain i-small icon-remove"></i></a>
+						</div>
+						<div class="fright rightmargin-sm">{{ recipient.name }}:{{ recipient.chat_id }}</div></li>
+					{% endfor %}
+				<a href="{% url 'hook-recipient-create' bot.pk object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>				
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	
+	
+	<div class="fright">
+		<a href="{% url 'hook-update' object.bot.pk object.pk %}" class="button button-small button-border button-rounded"><i class="icon-edit"> Update</i></a>
+		<a href="{% url 'hook-delete' object.bot.pk object.pk %}" class="button button-small button-border button-rounded"><i class="icon-remove"> Delete</i></a>
+	</div>		
+
+{% endblock %}
+
+

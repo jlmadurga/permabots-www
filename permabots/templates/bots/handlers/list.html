@@ -1,0 +1,43 @@
+{% extends "bots/base/list.html" %}
+{% load staticfiles i18n %}
+
+{% block list_title %}{% trans "Handlers" %} for <i>{{ bot }}</i>{% endblock %}
+
+{% block datatable_id %}datatable-handlers{% endblock %}
+
+				{% block columns %}
+								<th>{% trans "Pattern" %}</th>
+								<th>{% trans "Priority" %}</th>
+								<th>{% trans "Source States" %}</th>
+								<th>{% trans "Target State" %}</th>
+								<th>{% trans "Request Url" %}</th>
+								<th>{% trans "Request Method" %}</th>
+								<th>{% trans "Response Text" %}</th>
+								<th>{% trans "Response Keyboard" %}</th>
+				{% endblock %}
+				
+				{% block name %}<a href="{% url 'handler-detail' bot.pk object.pk %}">{{ object.name }}</a>{% endblock %}
+
+{% block rows %}
+								<td>{{ object.pattern |truncatechars:20}}</td>
+								<td>{{ object.priority }}</td>
+								<td>{% for state in object.source_states.all %} {{ state }} {% endfor %}</td>
+								<td>{{ object.target_state }}</td>
+								<td>{{ object.request.url_template |truncatechars:20}}</td>
+								<td>{{ object.request.method }}</td>
+								<td>{{ object.response.text_template |truncatechars:20 }}</td>
+								<td>{{ object.response.keyboard_template |truncatechars:20 }}</td>
+{% endblock %}
+
+{% block url_detail %}{% url 'handler-detail' bot.pk object.pk %}{% endblock %}
+
+{% block url_delete %}{% url 'handler-delete' bot.pk object.pk %}{% endblock %}
+
+{% block url_update %}{% url 'handler-update' bot.pk object.pk%}{% endblock %}
+
+{% block url_create %}{% url 'handler-create' bot.pk %}{% endblock %}
+
+{% block create_msg %}Create new handler{% endblock %}
+
+{% block datatable_id_js %}#datatable-handlers{% endblock %}
+

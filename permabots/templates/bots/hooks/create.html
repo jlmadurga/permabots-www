@@ -1,0 +1,9 @@
+{% extends "bots/base/create.html" %}
+{% load staticfiles i18n %}
+
+{% block panel_width %}{% endblock %}
+
+
+{% block element %}{% trans "Create Hook" %}{% endblock %}
+
+{% block redirect_back %}{% url 'hook-list' bot.pk %}{% endblock %}

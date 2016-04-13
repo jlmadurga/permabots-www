@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+	<h3>{% block list_title %}{% endblock %}</h3>
+	<div class="table-responsive">
+
+		<table id="{% block datatable_id %}{% endblock %}" class="table table-striped table-bordered" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th>{% trans "Name" %}</th>
+				{% block columns %}
+				{% endblock %}
+				</tr>
+			</thead>
+			<tbody>
+			{% for object in object_list %}
+				<tr>
+					<td>
+						<div class="dropup">
+							{% block name %}{% endblock %}
+							{% if object.enabled %}<span class="label label-success">On</span> {% else %}<span class="label label-danger">Off</span> {% endif %}
+							<a class="dropdown-toggle fright" data-toggle="dropdown" href="#">
+								<i class="icon-reorder"></i>
+							</a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="{% block url_detail %}{% endblock %}">View</a></li>
+								<li><a href="{% block url_update %}{% endblock %}">Edit</a></li>
+								<li><a href="{% block url_delete %}{% endblock %}">Delete</a></li>
+								{% block extra_actions %}{% endblock %}
+							</ul>
+													
+						</div>		
+
+					</td>	
+				
+				{% block rows %}
+				{% endblock %}
+
+
+
+					</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	
+
+
+<a href="{% block url_create %}{% endblock %}" class="button button-small button-border button-rounded">{% block create_msg %}{% endblock %}</a>
+{% endblock %}
+
+
+
+
+{% block extra_scripts %}
+	<link rel="stylesheet" href="{% static "css/components/bs-datatable.css" %}" type="text/css">
+	<script type="text/javascript" src="{% static "js/components/bs-datatable.js" %}"></script>
+<script>
+		$(document).ready(function() {
+			$('{% block datatable_id_js %}{% endblock %}').DataTable();
+		});
+</script>
+{% endblock %}

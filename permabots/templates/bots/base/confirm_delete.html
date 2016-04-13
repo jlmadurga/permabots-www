@@ -1,0 +1,12 @@
+{% extends "bots/base/base.html" %}
+{% load staticfiles i18n %}
+
+{% block panel_width %}style="max-width: 500px;"{% endblock %}
+
+
+{% block form_content %}
+				{% csrf_token %}
+    			<p>Are you sure you want to delete it?</p>
+    			<input class="button button-small button-border button-rounded" type="submit" value="Confirm" />
+    			<a href="{% block redirect_back %}{% endblock %}" class="button button-small button-border button-rounded">Cancel</a>
+{% endblock %}

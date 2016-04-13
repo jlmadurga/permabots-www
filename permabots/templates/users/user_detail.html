@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}User: {{ object.username }}{% endblock %}
+
+{% block content %}
+
+{% if object == request.user %}
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Profile" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				<ul class="list-group">
+					<li class="list-group-item"><b>Email address</b>
+						<div class="fright">
+							<a href="{% url 'account_email' %}"><i class="i-plain i-small icon-edit"></i></a>
+						</div>
+						<div class="fright rightmargin-sm">
+								{{ object.email }}
+						</div>
+					</li>
+					<li class="list-group-item"><b>Name</b> (Optional)
+
+						<div class="fright">
+							<a href="{% url 'users:update' %}"><i class="i-plain i-small icon-edit"></i></a>
+						</div>
+						<div class="fright rightmargin-sm">
+								{{ object.name }}
+						</div>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Password" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+					<div class="divcenter">
+						<a href="{% url 'account_change_password' %}" class="button button-small button-border button-rounded"><i class="icon-edit"> Change</i></a>
+					</div>
+					</li>
+					<div class="divcenter">
+						<a href="{% url 'account_reset_password' %}" class="button button-small button-border button-rounded"><i class="icon-edit"> Reset</i></a>
+					</div>
+			</div>
+
+		</div>
+	</div>
+	
+	
+	<div class="section  nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "API key" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+
+					<ul class="list-group">
+						<li class="list-group-item">
+							<b>Token</b><div class="fright"><span class="badge">{{ object.auth_token }}</span></div>
+						</li>
+					</ul>
+			</div>
+
+		</div>
+	</div>
+{% endif %}
+	
+
+</div>
+{% endblock content %}
+

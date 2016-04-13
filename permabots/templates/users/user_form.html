@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="divcenter nobottommargin clearfix" id="tab-login-register" style="max-width: 500px;">
+	<div class="panel panel-default nobottommargin">
+		<div class="panel-body" style="padding: 40px;">
+    <h1>{{ user.email }}</h1>
+    <form class="form-horizontal" method="post" action="{% url 'users:update' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" class="button button-small button-border button-rounded">Update</button>
+          </div>
+        </div>
+    </form>
+    </div>
+    </div>
+    </div>
+{% endblock %}

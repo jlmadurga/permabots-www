@@ -1,0 +1,7 @@
+{% extends "bots/base/edit.html" %}
+{% load staticfiles i18n %}
+
+
+{% block element %}{% trans "Update Header Parameter" %}<span class="label label-primary leftmargin-sm">{{ object.key }}</span>{% endblock %}
+
+{% block redirect_back %}{% url 'handler-detail' bot.pk handler.pk %}{% endblock %}

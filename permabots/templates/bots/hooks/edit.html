@@ -1,0 +1,9 @@
+{% extends "bots/base/edit.html" %}
+{% load staticfiles i18n %}
+
+{% block panel_width %}{% endblock %}
+
+
+{% block element %}{% trans "Update Hook" %} <span class="label label-primary leftmargin-sm">{{ object.name }}</span>{% endblock %}
+
+{% block redirect_back %}{% url 'hook-list' bot.pk %}{% endblock %}

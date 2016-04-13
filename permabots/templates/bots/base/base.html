@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+{% load crispy_forms_tags %}
+
+
+{% block extra_css %}
+	<link rel="stylesheet" href="{% static "css/components/bs-switches.css" %}" type="text/css" />
+	<link rel="stylesheet" href="{% static "css/components/select-boxes.css" %}" type="text/css" />
+	<link rel="stylesheet" href="{% static "css/components/bs-select.css" %}" type="text/css" />
+	<link rel="stylesheet" href="{% static "css/components/radio-checkbox.css" %}" type="text/css" />	
+{% endblock %}
+
+
+{% block content %}
+
+<div class="divcenter nobottommargin clearfix" {% block panel_width %}{% endblock %}>
+	<div class="panel panel-default nobottommargin">
+		<div class="panel-body" style="padding: 40px;">
+			<h3>{% block element %}{% endblock %}</h3>
+			<form action="" method="post">
+				{% block form_content %}
+    			{% crispy form %}
+    			<input class="button button-small button-border button-rounded" type="submit" value="{% block submit_value %}{% endblock %}" />
+    			<a href="{% block redirect_back %}{% endblock %}" class="button button-small button-border button-rounded">Cancel</a>    		
+    			{% endblock %}	
+			</form>
+			
+		</div>
+	</div>
+</div>	
+
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+	<script type="text/javascript" src="{% static "js/components/bs-switches.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/components/select-boxes.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/components/bs-select.js" %}"></script>
+	<script>
+
+		jQuery(".bt-switch").bootstrapSwitch();
+		
+		$(".select-tags").select2({
+			tags: true
+		});
+
+	</script>
+
+
+{% endblock %}

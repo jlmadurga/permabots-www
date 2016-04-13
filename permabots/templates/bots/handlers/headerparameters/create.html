@@ -1,0 +1,8 @@
+{% extends "bots/base/create.html" %}
+{% load staticfiles i18n %}
+
+
+
+{% block element %}{% trans "Create Header Parameter" %}{% endblock %}
+
+{% block redirect_back %}{% url 'handler-detail' bot.pk handler.pk %}{% endblock %}

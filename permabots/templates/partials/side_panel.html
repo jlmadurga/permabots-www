@@ -1,0 +1,49 @@
+{% load bots_tags i18n %}
+
+<div class="body-overlay"></div>
+
+	<div id="side-panel" class="dark">
+
+		<div id="side-panel-trigger-close" class="side-panel-trigger"><a href="#"><i class="icon-line-cross"></i></a></div>
+
+		<div class="side-panel-wrap">
+
+			<div class="widget clearfix">
+
+			
+				<h4><a href="{% url 'bot-list' %}">Bots</a></h4>
+
+				<nav class="nav-tree nobottommargin">
+					<ul>
+					{% show_menu_bots request.user %}
+					</ul>
+				</nav>
+
+			</div>
+			<div class="widget clearfix">
+				<nav class="nav-tree nobottommargin">
+					<ul>
+						<li><a href="{% url 'bot-create' %}">Create new bot</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+			
+			<div class="widget clearfix">
+				<nav class="nav-tree nobottommargin">
+					<ul>
+						<li><a href="{% url 'users:detail' request.user.username  %}">{{ request.user.email }}</a>
+							<ul>
+								<li><a href="{% url 'users:detail' request.user.username  %}">{% trans "Manage account" %}</a></li>
+								<li><a href="{% url 'account_logout' %}">{% trans "Logout" %}</a></li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+			
+			
+		</div>
+		
+	</div>
+</div>

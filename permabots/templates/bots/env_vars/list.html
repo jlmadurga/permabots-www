@@ -1,0 +1,27 @@
+{% extends "bots/base/list.html" %}
+{% load staticfiles i18n %}
+
+{% block title %}{% trans "Environment Variables" %}{% endblock %}
+
+{% block datatable_id %}datatable-environmentvars{% endblock %}
+
+				{% block columns %}
+								<th>Key</th>
+								<th>Value</th>
+				{% endblock %}
+
+{% block rows %}
+	<td>{{ object.key }}</td>
+	<td>{{ object.value }}</td>
+{% endblock %}
+
+{% block url_delete %}{% url 'env-delete' bot.pk object.pk %}{% endblock %}
+
+{% block url_update %}{% url 'env-update' bot.pk object.pk%}{% endblock %}
+
+{% block url_create %}{% url 'env-create' bot.pk %}{% endblock %}
+
+{% block create_msg %}Create new Environment Variable{% endblock %}
+
+{% block datatable_id_js %}#datatable-environmentvars{% endblock %}
+

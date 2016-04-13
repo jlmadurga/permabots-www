@@ -1,0 +1,8 @@
+{% extends "bots/base/edit.html" %}
+{% load staticfiles i18n %}
+{% load crispy_forms_tags %}
+
+
+{% block element %}{% trans "Update Url Parameter" %}<span class="label label-primary leftmargin-sm">{{ object.key }}</span>{% endblock %}
+
+{% block redirect_back %}{% url 'handler-detail' bot.pk handler.pk %}{% endblock %}

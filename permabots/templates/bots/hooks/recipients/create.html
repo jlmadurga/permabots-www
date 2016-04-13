@@ -1,0 +1,8 @@
+{% extends "bots/base/create.html" %}
+{% load staticfiles i18n %}
+{% load crispy_forms_tags %}
+
+
+{% block element %}{% trans "Create Hook Recipient" %}{% endblock %}
+
+{% block redirect_back %}{% url 'hook-detail' bot.pk hook.pk %}{% endblock %}

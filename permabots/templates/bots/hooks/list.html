@@ -1,0 +1,39 @@
+{% extends "bots/base/list.html" %}
+{% load staticfiles i18n %}
+
+{% block list_title %}{% trans "Hooks" %}{% endblock %}
+
+{% block datatable_id %}datatable-hooks{% endblock %}
+
+				{% block columns %}
+					<th>Url Key</th>
+					<th>Response Text</th>
+					<th>Response Keyboard</th>
+				{% endblock %}
+				
+				{% block name %}<a href="{% url 'hook-detail' bot.pk object.pk %}">{{ object.name }}</a>{% endblock %}
+
+{% block rows %}
+	<td>http://www.permabots.com/processing/hook/{{ object.key }}/</a></td>
+	<td>{{ object.response.text_template |truncatechars:20}}</td>
+	<td>{{ object.response.keyboard_template |truncatechars:20}}</td>
+{% endblock %}
+
+{% block element %}{% trans "Delete Hook" %} <span class="label label-primary">{{ object.key }}</span>{% endblock %}
+
+{% block url_detail %}{% url 'hook-detail' bot.pk object.pk %}{% endblock %}
+
+{% block url_delete %}{% url 'hook-delete' bot.pk object.pk %}{% endblock %}
+
+{% block url_update %}{% url 'hook-update' bot.pk object.pk%}{% endblock %}
+
+{% block update_element %}Update Hook <span class="label label-primary">{{ object.key }}</span>{% endblock %}
+
+{% block create_element %}{% trans "Create Hook" %}{% endblock %}
+
+{% block url_create %}{% url 'hook-create' bot.pk %}{% endblock %}
+
+{% block create_msg %}Create new Hook{% endblock %}
+
+{% block datatable_id_js %}#datatable-hooks{% endblock %}
+
