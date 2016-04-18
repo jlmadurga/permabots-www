@@ -1,8 +1,8 @@
 from django.test import RequestFactory
 from test_plus.test import TestCase
 from microbot.test.factories import BotFactory, HandlerFactory, HookFactory, UrlParamFactory, \
-    HeaderParamFactory, RecipientFactory, StateFactory
-from microbot.models import EnvironmentVar, Bot, Handler, Hook, UrlParam, HeaderParam, Recipient, State
+    HeaderParamFactory, TelegramRecipientFactory, StateFactory
+from microbot.models import EnvironmentVar, Bot, Handler, Hook, UrlParam, HeaderParam, TelegramRecipient, State, TelegramBot
 from microbot.models import User as UserAPI
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
@@ -63,7 +63,7 @@ class TestBotListView(BaseListView):
         self.object = self.bot
     
     def assertObject(self, obj):
-        self.assertEqual(self.object.token, obj.token)
+        self.assertEqual(self.object.name, obj.name)
 
     def test_not_auth_redirected(self):
         self._test_not_auth_redirected()
@@ -246,8 +246,8 @@ class BaseManageTest(WebTest):
     def _test_not_auth_update_redirected(self):
         response = self.app.get(self.url_update())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse('account_login')+'?next=' + self.url_update())       
-
+        self.assertEqual(response.url, reverse('account_login')+'?next=' + self.url_update())
+        
         
 class TestManageBot(BaseManageTest):
     url_name_create = 'bot-create'
@@ -261,12 +261,10 @@ class TestManageBot(BaseManageTest):
         self.url_kwargs_update = {'pk': self.bot.pk}
         
     def fill_form(self, form, create=False):
-        if create:
-            form['token'] = self.bot.token
-        form['enabled'] = self.bot.enabled
+        form['name'] = self.bot.name
         
     def assertObject(self, obj):
-        self.assertEqual(self.bot.token, obj.token)
+        self.assertEqual(self.bot.name, obj.name)
     
     def test_create_ok(self):
         self.bot.delete()
@@ -283,7 +281,49 @@ class TestManageBot(BaseManageTest):
         self._test_not_auth_delete_redirected()
         
     def test_update_ok(self):
-        self.bot.enabled = False
+        self.bot.name = 'new_name'
+        self._test_update_ok()
+        
+    def test_not_auth_update_redirected(self):
+        self._test_not_auth_update_redirected()
+
+        
+class TestManageTelegramBot(BaseManageTest):
+    url_name_create = 'bot-telegram-create'
+    url_name_delete = 'bot-telegram-delete'
+    url_name_update = 'bot-telegram-update'
+    model = TelegramBot
+    
+    def setUp(self):
+        super(TestManageTelegramBot, self).setUp()
+        self.url_kwargs_create = {'bot_pk': self.bot.pk}
+        self.url_kwargs_delete = self.url_kwargs_update = {'bot_pk': self.bot.pk,
+                                                           'pk': self.bot.telegram_bot.pk}
+        
+    def fill_form(self, form, create=False):
+        if create:
+            form['token'] = self.bot.telegram_bot.token
+        form['enabled'] = self.bot.telegram_bot.enabled
+        
+    def assertObject(self, obj):
+        self.assertEqual(self.bot.telegram_bot.token, obj.token)
+    
+    def test_create_ok(self):
+        self.bot.telegram_bot.delete()
+        self.assertEqual(0, TelegramBot.objects.count())
+        self._test_create_ok()
+        
+    def test_not_auth_create_redirected(self):
+        self._test_not_auth_create_redirected()
+        
+    def test_delete_ok(self):
+        self._test_delete_ok()
+        
+    def test_not_auth_delete_redirected(self):
+        self._test_not_auth_delete_redirected()
+        
+    def test_update_ok(self):
+        self.bot.telegram_bot.enabled = False
         self._test_update_ok()
         
     def test_not_auth_update_redirected(self):
@@ -602,7 +642,7 @@ class TestManageHandlerHeaderParam(BaseManageTest):
         
         
 class TestManageHookRecipient(BaseManageTest):
-    model = Recipient
+    model = TelegramRecipient
     url_name_create = 'hook-recipient-create'
     url_name_delete = 'hook-recipient-delete'
     url_name_update = 'hook-recipient-update'
@@ -613,8 +653,8 @@ class TestManageHookRecipient(BaseManageTest):
         self.url_kwargs_create = {'bot_pk': self.bot.pk,
                                   'hook_pk': self.hook.pk}
         self.recipient_id = 12334234
-        self.recipient = RecipientFactory(hook=self.hook,
-                                          chat_id=self.recipient_id)
+        self.recipient = TelegramRecipientFactory(hook=self.hook,
+                                                  chat_id=self.recipient_id)
         self.url_kwargs_delete = self.url_kwargs_update = {'bot_pk': self.bot.pk,
                                                            'hook_pk': self.hook.pk,
                                                            'pk': self.recipient.pk}  

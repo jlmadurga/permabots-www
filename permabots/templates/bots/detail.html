@@ -2,7 +2,7 @@
 {% load staticfiles i18n %}
 
 {% block content %}
-	<h3><i>{{ object }}</i>{% if object.enabled %}<span class="label label-success leftmargin-sm"> {% trans "On" %}</span> {% else %}<span class="label label-danger leftmargin-sm"> {% trans "Off" %}</span> {% endif %}
+	<h3><i>{{ object }}</i>
 	<div class="fright">
 		<a href="{% url 'bot-update' object.pk %}" class="button button-small button-border button-rounded"><i class="icon-edit"> Update</i></a>
 		<a href="{% url 'bot-delete' object.pk %}" class="button button-small button-border button-rounded"><i class="icon-remove"> Delete</i></a>
@@ -14,16 +14,24 @@
 		<div class="container clearfix">
 
 			<div class="col_one_fifth topmargin-sm nobottommargin">
-				<h4>{% trans "Telegram Info" %}</h4>
+				<h4>{% trans "Telegram Bot" %}</h4>
 			</div>
 
 			<div class="col_three_fifth nobottommargin col_last">
+				{% if object.telegram_bot %}
 				<ul class="list-group">
 					<li class="list-group-item"><b>Token</b><span class="badge">{{ object.token }}</span></li>
 					<li class="list-group-item"><b>Username</b><div class="fright">{{ object.user_api.username }}</div></li>
 					<li class="list-group-item"><b>First Name</b> <div class="fright">{{ object.user_api.first_name }}</div></li>
 					<li class="list-group-item"><b>Id</b><div class="fright">{{ object.user_api.id }}</div></li>
+					
 				</ul>
+				<a href="{% url 'bot-telegram-update' object.pk object.telegram_bot.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Update</i></a>			
+				<a href="{% url 'bot-telegram-delete' object.pk object.telegram_bot.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Delete</i></a>		
+				
+				{% else %}
+				<a href="{% url 'bot-telegram-create' object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>				
+				{% endif %}
 			</div>
 
 		</div>

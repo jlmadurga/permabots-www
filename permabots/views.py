@@ -1,5 +1,5 @@
-from microbot.models import Bot, Handler, Hook, EnvironmentVar, Request, Response, UrlParam, HeaderParam, Recipient, \
-    State
+from microbot.models import Bot, Handler, Hook, EnvironmentVar, Request, Response, UrlParam, HeaderParam, TelegramRecipient, \
+    State, TelegramBot
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from django.core.urlresolvers import reverse_lazy
@@ -21,25 +21,19 @@ class BaseBotView(LoginRequiredMixin):
 
 class BotListView(BaseBotView, generic.ListView):
     model = Bot
-    template_name = "bots/list.html" 
+    template_name = "bots/list.html"
     
-     
 class BotCreateView(BaseBotView, generic.CreateView):
     model = Bot
     template_name = "bots/create.html"
     success_msg = _("Bot created")
     form_class = forms.BotCreateForm
-       
+
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.owner = self.request.user
-        try:
-            obj.save()
-        except:
-            form.add_error('token', 'Telegram Error. Check Token or try later.')
-            return self.form_invalid(form)
-        else:     
-            return HttpResponseRedirect(self.get_success_url())
+        obj.save()  
+        return HttpResponseRedirect(self.get_success_url())
 
 class BotDeleteView(BaseBotView, generic.DeleteView):
     model = Bot
@@ -50,13 +44,14 @@ class BotUpdateView(BaseBotView, generic.UpdateView):
     model = Bot
     template_name = 'bots/edit.html'
     success_msg = _("Bot updated")
-    form_class = forms.BotUpdateForm
+    form_class = forms.BotUpdateForm   
     
 class BotDetailView(BaseBotView, generic.DetailView):
     model = Bot
     template_name = "bots/detail.html"
     super_class = generic.DetailView
-
+    
+    
 class BaseWithBotView(LoginRequiredMixin):
     super_class = None
     success_msg = None
@@ -81,6 +76,58 @@ class BaseWithBotView(LoginRequiredMixin):
     def form_invalid(self, form):
         messages.error(self.request, _("Please check your errors"))
         return super(self.super_class, self).form_invalid(form)
+
+
+class TelegramBotCreateView(BaseWithBotView, generic.CreateView):
+    model = TelegramBot
+    template_name = "bots/telegram/create.html"
+    super_class = generic.CreateView
+    success_msg = _("Telegram Bot created")
+    form_class = forms.TelegramBotCreateForm
+    success_url = 'bot-detail'
+    
+    def get_kwargs(self):
+        return {'pk': self.kwargs['bot_pk']}
+    
+    def get_form_kwargs(self):
+        kwargs = super(TelegramBotCreateView, self).get_form_kwargs()
+        kwargs['bot'] = Bot.objects.get(pk=self.kwargs['bot_pk'])
+        return kwargs
+       
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.owner = self.request.user
+        try:
+            obj.save()
+        except:
+            form.add_error('token', 'Telegram Error. Check Token or try later.')
+            return self.form_invalid(form)
+        else:
+            bot = Bot.objects.get(pk=self.kwargs['bot_pk'])
+            bot.telegram_bot = obj
+            bot.save()
+            return HttpResponseRedirect(self.get_success_url())
+
+class TelegramBotDeleteView(BaseWithBotView, generic.DeleteView):
+    model = TelegramBot
+    template_name = 'bots/telegram/confirm_delete.html'
+    success_msg = _("Telegram Bot deleted")
+    super_class = generic.DeleteView
+    success_url = 'bot-detail'
+    
+    def get_kwargs(self):
+        return {'pk': self.kwargs['bot_pk']}
+    
+class TelegramBotUpdateView(BaseWithBotView, generic.UpdateView):
+    model = TelegramBot
+    template_name = 'bots/telegram/edit.html'
+    success_msg = _("Telegram Bot updated")
+    form_class = forms.TelegramBotUpdateForm   
+    success_url = 'bot-detail'
+    super_class = generic.UpdateView
+    
+    def get_kwargs(self):
+        return {'pk': self.kwargs['bot_pk']}
 
 class HandlerListView(BaseWithBotView, generic.ListView):
     model = Handler
@@ -454,16 +501,16 @@ class BaseWithHookBotView(BaseWithBotView):
                                                       'pk': self.kwargs['hook_pk']})
 
 
-class RecipientCreateView(BaseWithHookBotView, generic.CreateView):
-    model = Recipient
-    form_class = forms.RecipientForm
+class TelegramRecipientCreateView(BaseWithHookBotView, generic.CreateView):
+    model = TelegramRecipient
+    form_class = forms.TelegramRecipientForm
     template_name = "bots/hooks/recipients/create.html"
     super_class = generic.CreateView
-    success_msg = _("Hook Recipient created")
+    success_msg = _("Hook Telegram Recipient created")
     success_url = 'hook-detail'
     
     def form_invalid(self, form):
-        return super(RecipientCreateView, self).form_invalid(form)
+        return super(TelegramRecipientCreateView, self).form_invalid(form)
     
     def form_valid(self, form):
         obj = form.save(commit=False)
@@ -472,20 +519,20 @@ class RecipientCreateView(BaseWithHookBotView, generic.CreateView):
         obj.save()     
         return HttpResponseRedirect(self.get_success_url())
     
-class RecipientDeleteView(BaseWithHookBotView, generic.DeleteView):
-    model = Recipient
+class TelegramRecipientDeleteView(BaseWithHookBotView, generic.DeleteView):
+    model = TelegramRecipient
     template_name = 'bots/hooks/recipients/confirm_delete.html'
     super_class = generic.DeleteView
     success_url = 'hook-detail'
-    success_msg = _("Hook Recipient deleted")
+    success_msg = _("Hook Telegram Recipient deleted")
     
-class RecipientUpdateView(BaseWithHookBotView, generic.UpdateView):
-    model = Recipient
+class TelegramRecipientUpdateView(BaseWithHookBotView, generic.UpdateView):
+    model = TelegramRecipient
     template_name = 'bots/hooks/recipients/edit.html'
-    form_class = forms.RecipientForm
+    form_class = forms.TelegramRecipientForm
     super_class = generic.UpdateView
     success_url = 'hook-detail'
-    success_msg = _("Hook recipient updated")
+    success_msg = _("Hook Telegram Recipient updated")
     
 class StateCreateView(BaseWithBotView, generic.CreateView):
     model = State

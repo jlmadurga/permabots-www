@@ -1,7 +1,7 @@
 {% load staticfiles i18n %}
 
 	{% for bot in bots %}
-	<li><a href="{% url 'bot-detail' bot.pk %}">{{ bot.user_api.first_name }}</a>
+	<li><a href="{% url 'bot-detail' bot.pk %}">{{ bot.name }}</a>
 		<ul>
 			<li><a href="{% url 'handler-list' bot.pk %}">Handlers</a></li>
 			<li><a href="{% url 'hook-list' bot.pk %}">Hooks</a></li>

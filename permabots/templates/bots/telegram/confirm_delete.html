@@ -1,0 +1,9 @@
+{% extends "bots/base/confirm_delete.html" %}
+{% load staticfiles i18n %}
+
+
+{% block panel_width %}style="max-width: 500px;"{% endblock %}
+
+{% block element %}{% trans "Delete Telegram Bot" %} <span class="label label-primary leftmargin-sm">{{ object }}</span>{% endblock %}
+
+{% block redirect_back %}{% url 'bot-detail' bot.pk %}{% endblock %}

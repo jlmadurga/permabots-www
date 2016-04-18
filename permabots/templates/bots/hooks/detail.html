@@ -47,17 +47,19 @@
 		</div>
 	</div>
 	
+
 	<div class="section notopborder nomargin">
 
 		<div class="container clearfix">
 
 			<div class="col_one_fifth topmargin-sm nobottommargin">
-				<h4>{% trans "Recipients" %}</h4>
+				<h4>{% trans "Telegram Recipients" %}</h4>
 			</div>
-
+			
 			<div class="col_three_fifth nobottommargin col_last">
+				{% if object.telegram_bot %}
 				<ul class="list-group">
-					{% for recipient in object.recipients.all %}
+					{% for recipient in object.telegram_recipients.all %}
 						<li class="list-group-item"><b>name:chat_id</b>
 						<div class="fright ">
 									<a href="{% url 'hook-recipient-update' bot.pk object.pk recipient.pk %}"><i class="i-plain i-small icon-edit"></i></a>
@@ -67,6 +69,9 @@
 					{% endfor %}
 				<a href="{% url 'hook-recipient-create' bot.pk object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>				
 				</ul>
+				{% else %}
+				<span class="label label-danger leftmargin-sm"> {% trans "Integrate Telegram Bot first" %}</span>
+				{% endif %}
 			</div>
 
 		</div>
