@@ -1,9 +1,9 @@
 from django.test import RequestFactory
 from test_plus.test import TestCase
 from microbot.test.factories import BotFactory, HandlerFactory, HookFactory, UrlParamFactory, \
-    HeaderParamFactory, TelegramRecipientFactory, StateFactory
-from microbot.models import EnvironmentVar, Bot, Handler, Hook, UrlParam, HeaderParam, TelegramRecipient, State, TelegramBot
-from microbot.models import User as UserAPI
+    HeaderParamFactory, TelegramRecipientFactory, StateFactory, KikRecipientFactory
+from microbot.models import EnvironmentVar, Bot, Handler, Hook, UrlParam, HeaderParam, TelegramRecipient, State, TelegramBot, KikBot, KikRecipient
+from microbot.models import TelegramUser as UserAPI
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from django_webtest import WebTest
@@ -329,6 +329,49 @@ class TestManageTelegramBot(BaseManageTest):
     def test_not_auth_update_redirected(self):
         self._test_not_auth_update_redirected()
         
+class TestManageKikBot(BaseManageTest):
+    url_name_create = 'bot-kik-create'
+    url_name_delete = 'bot-kik-delete'
+    url_name_update = 'bot-kik-update'
+    model = KikBot
+    
+    def setUp(self):
+        super(TestManageKikBot, self).setUp()
+        self.url_kwargs_create = {'bot_pk': self.bot.pk}
+        self.url_kwargs_delete = self.url_kwargs_update = {'bot_pk': self.bot.pk,
+                                                           'pk': self.bot.kik_bot.pk}
+        
+    def fill_form(self, form, create=False):
+        if create:
+            form['api_key'] = self.bot.kik_bot.api_key
+            form['username'] = self.bot.kik_bot.username
+        form['enabled'] = self.bot.kik_bot.enabled
+        
+    def assertObject(self, obj):
+        self.assertEqual(self.bot.kik_bot.api_key, obj.api_key)
+        self.assertEqual(self.bot.kik_bot.username, obj.username)
+        
+    def test_create_ok(self):
+        self.bot.kik_bot.delete()
+        self.assertEqual(0, KikBot.objects.count())
+        self._test_create_ok()
+        
+    def test_not_auth_create_redirected(self):
+        self._test_not_auth_create_redirected()
+        
+    def test_delete_ok(self):
+        self._test_delete_ok()
+        
+    def test_not_auth_delete_redirected(self):
+        self._test_not_auth_delete_redirected()
+        
+    def test_update_ok(self):
+        self.bot.kik_bot.enabled = False
+        self._test_update_ok()
+        
+    def test_not_auth_update_redirected(self):
+        self._test_not_auth_update_redirected()
+        
 class TestManageEnvVar(BaseManageTest):
     model = EnvironmentVar
     url_name_create = 'env-create'
@@ -641,14 +684,14 @@ class TestManageHandlerHeaderParam(BaseManageTest):
         self._test_not_auth_update_redirected()
         
         
-class TestManageHookRecipient(BaseManageTest):
+class TestManageHookTelegramRecipient(BaseManageTest):
     model = TelegramRecipient
-    url_name_create = 'hook-recipient-create'
-    url_name_delete = 'hook-recipient-delete'
-    url_name_update = 'hook-recipient-update'
+    url_name_create = 'hook-telegram-recipient-create'
+    url_name_delete = 'hook-telegram-recipient-delete'
+    url_name_update = 'hook-telegram-recipient-update'
     
     def setUp(self):
-        super(TestManageHookRecipient, self).setUp()
+        super(TestManageHookTelegramRecipient, self).setUp()
         self.hook = HookFactory(bot=self.bot)
         self.url_kwargs_create = {'bot_pk': self.bot.pk,
                                   'hook_pk': self.hook.pk}
@@ -683,6 +726,58 @@ class TestManageHookRecipient(BaseManageTest):
 
     def test_update_ok(self):
         self.recipient.chat_id = 234234234
+        self._test_update_ok()
+                
+    def test_not_auth_update_redirected(self):
+        self._test_not_auth_update_redirected()
+        
+        
+class TestManageHookKikRecipient(BaseManageTest):
+    model = KikRecipient
+    url_name_create = 'hook-kik-recipient-create'
+    url_name_delete = 'hook-kik-recipient-delete'
+    url_name_update = 'hook-kik-recipient-update'
+    
+    def setUp(self):
+        super(TestManageHookKikRecipient, self).setUp()
+        self.hook = HookFactory(bot=self.bot)
+        self.url_kwargs_create = {'bot_pk': self.bot.pk,
+                                  'hook_pk': self.hook.pk}
+        self.recipient_id = "recipientid"
+        self.recipient_username = "recipientusername"
+        self.recipient = KikRecipientFactory(hook=self.hook,
+                                             chat_id=self.recipient_id,
+                                             username=self.recipient_username)
+        self.url_kwargs_delete = self.url_kwargs_update = {'bot_pk': self.bot.pk,
+                                                           'hook_pk': self.hook.pk,
+                                                           'pk': self.recipient.pk}  
+        
+    def fill_form(self, form, create=False):
+        form['chat_id'] = self.recipient.chat_id
+        form['name'] = self.recipient.name     
+        form['username'] = self.recipient.username
+        
+    def assertObject(self, obj):
+        self.assertEqual(obj.hook, self.hook)
+        self.assertEqual(obj.chat_id, self.recipient.chat_id)
+        self.assertEqual(obj.name, self.recipient.name)  
+        self.assertEqual(obj.username, self.recipient.username)       
+        
+    def test_create_ok(self):
+        self.recipient.delete()
+        self._test_create_ok()
+               
+    def test_not_auth_create_redirected(self):
+        self._test_not_auth_create_redirected()
+        
+    def test_delete_ok(self):
+        self._test_delete_ok()
+        
+    def test_not_auth_delete_redirected(self):
+        self._test_not_auth_delete_redirected()
+
+    def test_update_ok(self):
+        self.recipient.chat_id = '234234234'
         self._test_update_ok()
                 
     def test_not_auth_update_redirected(self):

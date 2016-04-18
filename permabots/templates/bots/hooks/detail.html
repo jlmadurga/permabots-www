@@ -47,7 +47,6 @@
 		</div>
 	</div>
 	
-
 	<div class="section notopborder nomargin">
 
 		<div class="container clearfix">
@@ -57,20 +56,49 @@
 			</div>
 			
 			<div class="col_three_fifth nobottommargin col_last">
-				{% if object.telegram_bot %}
+				{% if object.bot.telegram_bot %}
 				<ul class="list-group">
 					{% for recipient in object.telegram_recipients.all %}
 						<li class="list-group-item"><b>name:chat_id</b>
 						<div class="fright ">
-									<a href="{% url 'hook-recipient-update' bot.pk object.pk recipient.pk %}"><i class="i-plain i-small icon-edit"></i></a>
-									<a href="{% url 'hook-recipient-delete' bot.pk object.pk recipient.pk %}"><i class="i-plain i-small icon-remove"></i></a>
+									<a href="{% url 'hook-telegram-recipient-update' bot.pk object.pk recipient.pk %}"><i class="i-plain i-small icon-edit"></i></a>
+									<a href="{% url 'hook-telegram-recipient-delete' bot.pk object.pk recipient.pk %}"><i class="i-plain i-small icon-remove"></i></a>
 						</div>
 						<div class="fright rightmargin-sm">{{ recipient.name }}:{{ recipient.chat_id }}</div></li>
 					{% endfor %}
-				<a href="{% url 'hook-recipient-create' bot.pk object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>				
+				<a href="{% url 'hook-telegram-recipient-create' bot.pk object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>				
 				</ul>
 				{% else %}
 				<span class="label label-danger leftmargin-sm"> {% trans "Integrate Telegram Bot first" %}</span>
+				{% endif %}
+			</div>
+
+		</div>
+	</div>
+	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Kik Recipients" %}</h4>
+			</div>
+			
+			<div class="col_three_fifth nobottommargin col_last">
+				{% if object.bot.kik_bot %}
+				<ul class="list-group">
+					{% for recipient in object.kik_recipients.all %}
+						<li class="list-group-item"><b>name:chat_id</b>
+						<div class="fright ">
+									<a href="{% url 'hook-kik-recipient-update' bot.pk object.pk recipient.pk %}"><i class="i-plain i-small icon-edit"></i></a>
+									<a href="{% url 'hook-kik-recipient-delete' bot.pk object.pk recipient.pk %}"><i class="i-plain i-small icon-remove"></i></a>
+						</div>
+						<div class="fright rightmargin-sm">{{ recipient.name }}:{{ recipient.chat_id }}</div></li>
+					{% endfor %}
+				<a href="{% url 'hook-kik-recipient-create' bot.pk object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>				
+				</ul>
+				{% else %}
+				<span class="label label-danger leftmargin-sm"> {% trans "Integrate Kik Bot first" %}</span>
 				{% endif %}
 			</div>
 

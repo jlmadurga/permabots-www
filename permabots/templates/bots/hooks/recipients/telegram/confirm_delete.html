@@ -1,0 +1,6 @@
+{% extends "bots/base/confirm_delete.html" %}
+{% load staticfiles i18n %}
+
+{% block element %}{% trans "Delete Hook Telegram Recipient" %} <span class="label label-primary">{{ object.name }}</span>{% endblock %}
+
+{% block redirect_back %}{% url 'hook-detail' bot.pk hook.pk %}{% endblock %}

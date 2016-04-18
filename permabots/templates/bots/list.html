@@ -7,12 +7,14 @@
 
 				{% block columns %}
 					<th>Telegram</th>
+					<th>Kik</th>
 				{% endblock %}
 				
 				{% block name %}<a href="{% url 'bot-detail' object.pk %}">{{ object.name }}</a>{% endblock %}
 
 {% block rows %}
 					<td>{% if object.telegram_bot %}{% if object.telegram_bot.enabled %}<span class="label label-success">On</span> {% else %}<span class="label label-danger">Off</span> {% endif %}{{ object.telegram_bot.token }}{% endif %}</td>
+					<td>{% if object.kik_bot %}{% if object.kik_bot.enabled %}<span class="label label-success">On</span> {% else %}<span class="label label-danger">Off</span> {% endif %}{{ object.kik_bot.username }}{% endif %}</td>
 
 {% endblock %}
 
