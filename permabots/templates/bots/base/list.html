@@ -20,6 +20,7 @@
 					<td>
 						<div class="dropup">
 							{% block name %}{% endblock %}
+							{% block enabled %}{% if object.enabled %}<span class="label label-success">On</span> {% else %}<span class="label label-danger">Off</span> {% endif %}{% endblock %}
 							<a class="dropdown-toggle fright" data-toggle="dropdown" href="#">
 								<i class="icon-reorder"></i>
 							</a>
