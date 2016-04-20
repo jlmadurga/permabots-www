@@ -1,9 +1,9 @@
 from django.test import RequestFactory
 from test_plus.test import TestCase
 from microbot.test.factories import BotFactory, HandlerFactory, HookFactory, UrlParamFactory, \
-    HeaderParamFactory, RecipientFactory, StateFactory
-from microbot.models import EnvironmentVar, Bot, Handler, Hook, UrlParam, HeaderParam, Recipient, State
-from microbot.models import User as UserAPI
+    HeaderParamFactory, TelegramRecipientFactory, StateFactory, KikRecipientFactory
+from microbot.models import EnvironmentVar, Bot, Handler, Hook, UrlParam, HeaderParam, TelegramRecipient, State, TelegramBot, KikBot, KikRecipient
+from microbot.models import TelegramUser as UserAPI
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from django_webtest import WebTest
@@ -63,7 +63,7 @@ class TestBotListView(BaseListView):
         self.object = self.bot
     
     def assertObject(self, obj):
-        self.assertEqual(self.object.token, obj.token)
+        self.assertEqual(self.object.name, obj.name)
 
     def test_not_auth_redirected(self):
         self._test_not_auth_redirected()
@@ -246,8 +246,8 @@ class BaseManageTest(WebTest):
     def _test_not_auth_update_redirected(self):
         response = self.app.get(self.url_update())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse('account_login')+'?next=' + self.url_update())       
-
+        self.assertEqual(response.url, reverse('account_login')+'?next=' + self.url_update())
+        
         
 class TestManageBot(BaseManageTest):
     url_name_create = 'bot-create'
@@ -261,12 +261,10 @@ class TestManageBot(BaseManageTest):
         self.url_kwargs_update = {'pk': self.bot.pk}
         
     def fill_form(self, form, create=False):
-        if create:
-            form['token'] = self.bot.token
-        form['enabled'] = self.bot.enabled
+        form['name'] = self.bot.name
         
     def assertObject(self, obj):
-        self.assertEqual(self.bot.token, obj.token)
+        self.assertEqual(self.bot.name, obj.name)
     
     def test_create_ok(self):
         self.bot.delete()
@@ -283,7 +281,92 @@ class TestManageBot(BaseManageTest):
         self._test_not_auth_delete_redirected()
         
     def test_update_ok(self):
-        self.bot.enabled = False
+        self.bot.name = 'new_name'
+        self._test_update_ok()
+        
+    def test_not_auth_update_redirected(self):
+        self._test_not_auth_update_redirected()
+
+        
+class TestManageTelegramBot(BaseManageTest):
+    url_name_create = 'bot-telegram-create'
+    url_name_delete = 'bot-telegram-delete'
+    url_name_update = 'bot-telegram-update'
+    model = TelegramBot
+    
+    def setUp(self):
+        super(TestManageTelegramBot, self).setUp()
+        self.url_kwargs_create = {'bot_pk': self.bot.pk}
+        self.url_kwargs_delete = self.url_kwargs_update = {'bot_pk': self.bot.pk,
+                                                           'pk': self.bot.telegram_bot.pk}
+        
+    def fill_form(self, form, create=False):
+        if create:
+            form['token'] = self.bot.telegram_bot.token
+        form['enabled'] = self.bot.telegram_bot.enabled
+        
+    def assertObject(self, obj):
+        self.assertEqual(self.bot.telegram_bot.token, obj.token)
+    
+    def test_create_ok(self):
+        self.bot.telegram_bot.delete()
+        self.assertEqual(0, TelegramBot.objects.count())
+        self._test_create_ok()
+        
+    def test_not_auth_create_redirected(self):
+        self._test_not_auth_create_redirected()
+        
+    def test_delete_ok(self):
+        self._test_delete_ok()
+        
+    def test_not_auth_delete_redirected(self):
+        self._test_not_auth_delete_redirected()
+        
+    def test_update_ok(self):
+        self.bot.telegram_bot.enabled = False
+        self._test_update_ok()
+        
+    def test_not_auth_update_redirected(self):
+        self._test_not_auth_update_redirected()
+        
+class TestManageKikBot(BaseManageTest):
+    url_name_create = 'bot-kik-create'
+    url_name_delete = 'bot-kik-delete'
+    url_name_update = 'bot-kik-update'
+    model = KikBot
+    
+    def setUp(self):
+        super(TestManageKikBot, self).setUp()
+        self.url_kwargs_create = {'bot_pk': self.bot.pk}
+        self.url_kwargs_delete = self.url_kwargs_update = {'bot_pk': self.bot.pk,
+                                                           'pk': self.bot.kik_bot.pk}
+        
+    def fill_form(self, form, create=False):
+        if create:
+            form['api_key'] = self.bot.kik_bot.api_key
+            form['username'] = self.bot.kik_bot.username
+        form['enabled'] = self.bot.kik_bot.enabled
+        
+    def assertObject(self, obj):
+        self.assertEqual(self.bot.kik_bot.api_key, obj.api_key)
+        self.assertEqual(self.bot.kik_bot.username, obj.username)
+        
+    def test_create_ok(self):
+        self.bot.kik_bot.delete()
+        self.assertEqual(0, KikBot.objects.count())
+        self._test_create_ok()
+        
+    def test_not_auth_create_redirected(self):
+        self._test_not_auth_create_redirected()
+        
+    def test_delete_ok(self):
+        self._test_delete_ok()
+        
+    def test_not_auth_delete_redirected(self):
+        self._test_not_auth_delete_redirected()
+        
+    def test_update_ok(self):
+        self.bot.kik_bot.enabled = False
         self._test_update_ok()
         
     def test_not_auth_update_redirected(self):
@@ -385,18 +468,18 @@ class TestManageHandler(BaseManageTest):
     def test_create_validation_error_pattern(self):
         self.handler.delete()
         self.handler.pattern = '(?P<username>\w+'
-        self._test_create_validation_error('Not correct Regex')
+        self._test_create_validation_error('Not valid regular expression')
         
     def test_create_validation_error_text_template(self):
         self.handler.delete()
         self.handler.response.text_template = '<b>{{a}}'
-        self._test_create_validation_error('Not correct')
+        self._test_create_validation_error('Not correct HTML')
         
     def test_create_validation_error_keyboard_template(self):
         self.handler.delete()
-        self.handler.response.keyboard_template = '[["{{a}","asd"]]'
-        self._test_create_validation_error('Not correct')
-               
+        self.handler.response.keyboard_template = '[["{% if response.status == 200 %}{{a}}","asd"]]'
+        self._test_create_validation_error('Jinja error')
+
     def test_not_auth_create_redirected(self):
         self._test_not_auth_create_redirected()
         
@@ -412,15 +495,15 @@ class TestManageHandler(BaseManageTest):
         
     def test_update_validation_error_pattern(self):
         self.handler.pattern = '(?P<username>\w+'
-        self._test_update_validation_error('Not correct Regex')
+        self._test_update_validation_error('Not valid regular expression')
         
     def test_update_validation_error_text_template(self):
         self.handler.response.text_template = '<b>{{a}}'
-        self._test_update_validation_error('Not correct')
+        self._test_update_validation_error('Not correct HTML')
         
     def test_update_validation_error_keyboard_template(self):
         self.handler.response.keyboard_template = '[["{{a}","asd"]]'
-        self._test_update_validation_error('Not correct')
+        self._test_update_validation_error('Jinja error')
                
     def test_not_auth_update_redirected(self):
         self._test_not_auth_update_redirected()
@@ -459,12 +542,12 @@ class TestManageHook(BaseManageTest):
     def test_create_validation_error_text_template(self):
         self.hook.delete()
         self.hook.response.text_template = '<b>{{a}}'
-        self._test_create_validation_error('Not correct')
+        self._test_create_validation_error('Not correct HTML')
         
     def test_create_validation_error_keyboard_template(self):
         self.hook.delete()
         self.hook.response.keyboard_template = '[["{{a}","asd"]]'
-        self._test_create_validation_error('Not correct')
+        self._test_create_validation_error('Jinja error')
         
     def test_not_auth_create_redirected(self):
         self._test_not_auth_create_redirected()
@@ -481,11 +564,11 @@ class TestManageHook(BaseManageTest):
         
     def test_update_validation_error_text_template(self):
         self.hook.response.text_template = '<b>{{a}}'
-        self._test_update_validation_error('Not correct')
+        self._test_update_validation_error('Not correct HTML')
         
     def test_update_validation_error_keyboard_template(self):
         self.hook.response.keyboard_template = '[["{{a}","asd"]]'
-        self._test_update_validation_error('Not correct')
+        self._test_update_validation_error('Jinja error')
         
     def test_not_auth_update_redirected(self):
         self._test_not_auth_update_redirected()
@@ -523,7 +606,7 @@ class TestManageHandlerUrlParam(BaseManageTest):
     def test_create_validation_error(self):
         self.url_param.delete()
         self.url_param.value_template = "{{a}"
-        self._test_create_validation_error("Not correct")
+        self._test_create_validation_error("Jinja error")
                
     def test_not_auth_create_redirected(self):
         self._test_not_auth_create_redirected()
@@ -540,7 +623,7 @@ class TestManageHandlerUrlParam(BaseManageTest):
         
     def test_update_validation_error(self):
         self.url_param.value_template = "{{a}"
-        self._test_update_validation_error("Not correct")
+        self._test_update_validation_error("Jinja error")
                
     def test_not_auth_update_redirected(self):
         self._test_not_auth_update_redirected()
@@ -578,7 +661,7 @@ class TestManageHandlerHeaderParam(BaseManageTest):
     def test_create_validation_error(self):
         self.header_param.delete()
         self.header_param.value_template = "{{a}"
-        self._test_create_validation_error("Not correct")
+        self._test_create_validation_error("Jinja error")
                
     def test_not_auth_create_redirected(self):
         self._test_not_auth_create_redirected()
@@ -595,26 +678,26 @@ class TestManageHandlerHeaderParam(BaseManageTest):
         
     def test_update_validation_error(self):
         self.header_param.value_template = '{{a}'
-        self._test_update_validation_error('Not correct')
+        self._test_update_validation_error('Jinja error')
                
     def test_not_auth_update_redirected(self):
         self._test_not_auth_update_redirected()
         
         
-class TestManageHookRecipient(BaseManageTest):
-    model = Recipient
-    url_name_create = 'hook-recipient-create'
-    url_name_delete = 'hook-recipient-delete'
-    url_name_update = 'hook-recipient-update'
+class TestManageHookTelegramRecipient(BaseManageTest):
+    model = TelegramRecipient
+    url_name_create = 'hook-telegram-recipient-create'
+    url_name_delete = 'hook-telegram-recipient-delete'
+    url_name_update = 'hook-telegram-recipient-update'
     
     def setUp(self):
-        super(TestManageHookRecipient, self).setUp()
+        super(TestManageHookTelegramRecipient, self).setUp()
         self.hook = HookFactory(bot=self.bot)
         self.url_kwargs_create = {'bot_pk': self.bot.pk,
                                   'hook_pk': self.hook.pk}
         self.recipient_id = 12334234
-        self.recipient = RecipientFactory(hook=self.hook,
-                                          chat_id=self.recipient_id)
+        self.recipient = TelegramRecipientFactory(hook=self.hook,
+                                                  chat_id=self.recipient_id)
         self.url_kwargs_delete = self.url_kwargs_update = {'bot_pk': self.bot.pk,
                                                            'hook_pk': self.hook.pk,
                                                            'pk': self.recipient.pk}  
@@ -643,6 +726,58 @@ class TestManageHookRecipient(BaseManageTest):
 
     def test_update_ok(self):
         self.recipient.chat_id = 234234234
+        self._test_update_ok()
+                
+    def test_not_auth_update_redirected(self):
+        self._test_not_auth_update_redirected()
+        
+        
+class TestManageHookKikRecipient(BaseManageTest):
+    model = KikRecipient
+    url_name_create = 'hook-kik-recipient-create'
+    url_name_delete = 'hook-kik-recipient-delete'
+    url_name_update = 'hook-kik-recipient-update'
+    
+    def setUp(self):
+        super(TestManageHookKikRecipient, self).setUp()
+        self.hook = HookFactory(bot=self.bot)
+        self.url_kwargs_create = {'bot_pk': self.bot.pk,
+                                  'hook_pk': self.hook.pk}
+        self.recipient_id = "recipientid"
+        self.recipient_username = "recipientusername"
+        self.recipient = KikRecipientFactory(hook=self.hook,
+                                             chat_id=self.recipient_id,
+                                             username=self.recipient_username)
+        self.url_kwargs_delete = self.url_kwargs_update = {'bot_pk': self.bot.pk,
+                                                           'hook_pk': self.hook.pk,
+                                                           'pk': self.recipient.pk}  
+        
+    def fill_form(self, form, create=False):
+        form['chat_id'] = self.recipient.chat_id
+        form['name'] = self.recipient.name     
+        form['username'] = self.recipient.username
+        
+    def assertObject(self, obj):
+        self.assertEqual(obj.hook, self.hook)
+        self.assertEqual(obj.chat_id, self.recipient.chat_id)
+        self.assertEqual(obj.name, self.recipient.name)  
+        self.assertEqual(obj.username, self.recipient.username)       
+        
+    def test_create_ok(self):
+        self.recipient.delete()
+        self._test_create_ok()
+               
+    def test_not_auth_create_redirected(self):
+        self._test_not_auth_create_redirected()
+        
+    def test_delete_ok(self):
+        self._test_delete_ok()
+        
+    def test_not_auth_delete_redirected(self):
+        self._test_not_auth_delete_redirected()
+
+    def test_update_ok(self):
+        self.recipient.chat_id = '234234234'
         self._test_update_ok()
                 
     def test_not_auth_update_redirected(self):

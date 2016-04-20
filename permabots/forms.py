@@ -1,5 +1,5 @@
 from django import forms
-from microbot.models import Bot, Handler, Hook, Request, EnvironmentVar, UrlParam, HeaderParam, Recipient, State
+from microbot.models import Bot, Handler, Hook, Request, EnvironmentVar, UrlParam, HeaderParam, TelegramRecipient, State, TelegramBot, KikBot, KikRecipient
 from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, HTML
@@ -11,36 +11,78 @@ class BaseCrispyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(BaseCrispyForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_tag = False
-
+        self.helper.form_tag = False      
 
 class BotCreateForm(BaseCrispyForm):
-    enabled = forms.BooleanField(label="", required=False)
     
     class Meta:
         model = Bot
+        fields = ('name', )
+        
+class BotUpdateForm(BaseCrispyForm):
+       
+    class Meta:
+        model = Bot
+        fields = ('name', )
+
+
+class TelegramBotCreateForm(BaseCrispyForm):
+    enabled = forms.BooleanField(label="", required=False)
+     
+    class Meta:
+        model = TelegramBot
         fields = ('token', 'enabled')
         
     def __init__(self, *args, **kwargs):
-        super(BotCreateForm, self).__init__(*args, **kwargs)
+        bot = kwargs.pop("bot")  # noqa
+        super(TelegramBotCreateForm, self).__init__(*args, **kwargs)
         self.helper.layout = Layout(
             Field('enabled', css_class="bt-switch", data_on_color="success", data_off_color="danger"),
             Field('token', placeholder="telegram token"),
         )
         
-class BotUpdateForm(BaseCrispyForm):
+class TelegramBotUpdateForm(BaseCrispyForm):
     enabled = forms.BooleanField(label="", required=False)
-       
+        
     class Meta:
         model = Bot
         fields = ('enabled', )
         
     def __init__(self, *args, **kwargs):
-        super(BotUpdateForm, self).__init__(*args, **kwargs)
+        super(TelegramBotUpdateForm, self).__init__(*args, **kwargs)
         self.helper.layout = Layout(
             Field('enabled', css_class="bt-switch", data_on_color="success", data_off_color="danger"),
         )
 
+class KikBotCreateForm(BaseCrispyForm):
+    enabled = forms.BooleanField(label="", required=False)
+     
+    class Meta:
+        model = KikBot
+        fields = ('username', 'api_key', 'enabled')
+        
+    def __init__(self, *args, **kwargs):
+        bot = kwargs.pop("bot")  # noqa
+        super(KikBotCreateForm, self).__init__(*args, **kwargs)
+        self.helper.layout = Layout(
+            Field('enabled', css_class="bt-switch", data_on_color="success", data_off_color="danger"),
+            Field('username', placeholder="kik username"),
+            Field('api_key', placeholder="kik api_key"),
+        )
+        
+class KikBotUpdateForm(BaseCrispyForm):
+    enabled = forms.BooleanField(label="", required=False)
+        
+    class Meta:
+        model = Bot
+        fields = ('enabled', )
+        
+    def __init__(self, *args, **kwargs):
+        super(KikBotUpdateForm, self).__init__(*args, **kwargs)
+        self.helper.layout = Layout(
+            Field('enabled', css_class="bt-switch", data_on_color="success", data_off_color="danger"),
+        )
+    
 class HandlerCreationForm(BaseCrispyForm):
     name = forms.CharField(label=_("Name"))
     pattern = forms.CharField(label=_("Pattern"), validators=[validators.validate_pattern],
@@ -50,22 +92,22 @@ class HandlerCreationForm(BaseCrispyForm):
     url_template = forms.CharField(label=_("Url template"), required=False,
                                    validators=[validators.validate_template],
                                    help_text='''In <a href="http://jinja.pocoo.org/">jinja2</a> format. Context: <code>pattern</code>, 
-                                            <code>env</code>, <code>update</code>, <code>state_context</code>.''')
+                                            <code>env</code>, <code>message</code>, <code>state_context</code>.''')
     method = forms.ChoiceField(label=_("Method"), widget=forms.RadioSelect, choices=Request.METHOD_CHOICES, required=False)
     data = forms.CharField(label=_("Data"), required=False, widget=forms.Textarea,
                            help_text=_('''Define JSON template. In <a href="http://jinja.pocoo.org/">jinja2</a> format. Context: 
-                                       <code>pattern</code>,<code>env</code>, <code>update</code>, <code>state_context</code>.'''))
+                                       <code>pattern</code>,<code>env</code>, <code>message</code>, <code>state_context</code>.'''))
     text_template = forms.CharField(label=_("Text template"), widget=forms.Textarea,
                                     validators=[validators.validate_template, validators.validate_telegram_text_html],
                                     help_text=_('''Text template. In <a href="http://jinja.pocoo.org/">jinja2</a> format. 
-                                                Context: <code>pattern</code>,<code>env</code>, <code>update</code>, 
+                                                Context: <code>pattern</code>,<code>env</code>, <code>message</code>, 
                                                 <code>state_context</code>, <code>response</code>.''')
                                     )
     keyboard_template = forms.CharField(label=_("Keyboard template"), widget=forms.Textarea, required=False,
                                         validators=[validators.validate_template, validators.validate_telegram_keyboard],
                                         help_text=_('''<a href="https://core.telegram.org/bots/api#replykeyboardmarkup">Telegram keyboard</a> template. 
                                                     In <a href="http://jinja.pocoo.org/">jinja2</a> format. 
-                                                    Context: <code>pattern</code>,<code>env</code>, <code>update</code>, <code>state_context</code>, 
+                                                    Context: <code>pattern</code>,<code>env</code>, <code>message</code>, <code>state_context</code>, 
                                                     <code>response</code>.'''))
     source_states = forms.ModelMultipleChoiceField(queryset=State.objects.all(), required=False,
                                                    help_text=_("In one of these states to execute"))
@@ -200,12 +242,17 @@ class HeaderParameterForm(BaseCrispyForm):
         model = HeaderParam
         fields = ('key', 'value_template')
         
-class RecipientForm(BaseCrispyForm):
+class TelegramRecipientForm(BaseCrispyForm):
     
     class Meta:
-        model = Recipient
-        fields = ('name', 'chat_id')    
+        model = TelegramRecipient
+        fields = ('name', 'chat_id')   
 
+class KikRecipientForm(BaseCrispyForm):
+    
+    class Meta:
+        model = KikRecipient
+        fields = ('name', 'chat_id', 'username')     
 
 class StateForm(BaseCrispyForm):
     

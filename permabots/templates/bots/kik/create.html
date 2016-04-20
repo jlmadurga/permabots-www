@@ -1,0 +1,8 @@
+{% extends "bots/base/create.html" %}
+{% load staticfiles i18n %}
+
+{% block panel_width %}style="max-width: 500px;"{% endblock %}
+
+{% block element %}{% trans "Create Kik Bot" %}{% endblock %}
+
+{% block redirect_back %}{% url 'bot-detail' bot.pk %}{% endblock %}

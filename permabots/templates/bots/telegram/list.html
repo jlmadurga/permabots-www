@@ -6,17 +6,19 @@
 {% block datatable_id %}datatable-bots{% endblock %}
 
 				{% block columns %}
-					<th>Telegram</th>
-					<th>Kik</th>
+					<th>Token</th>
+					<th>Id</th>
+					<th>Firstname</th>
+					<th>Username</th>
 				{% endblock %}
 				
-				{% block name %}<a href="{% url 'bot-detail' object.pk %}">{{ object.name }}</a>{% endblock %}
-				{% block enabled %}{% endblock %}
+				{% block name %}<a href="{% url 'bot-detail' object.pk %}">{{ object.user_api.first_name }}</a>{% endblock %}
 
 {% block rows %}
-					<td>{% if object.telegram_bot %}{% if object.telegram_bot.enabled %}<span class="label label-success">On</span> {% else %}<span class="label label-danger">Off</span> {% endif %}{{ object.telegram_bot }}{% endif %}</td>
-					<td>{% if object.kik_bot %}{% if object.kik_bot.enabled %}<span class="label label-success">On</span> {% else %}<span class="label label-danger">Off</span> {% endif %}{{ object.kik_bot.username }}{% endif %}</td>
-
+					<td>{{ object.token }}</td>
+					<td>{{ object.user_api.id }}</td>
+					<td>{{ object.user_api.first_name }}</td>
+					<td>{{ object.user_api.username }}</td>
 {% endblock %}
 
 {% block extra_actions %}
