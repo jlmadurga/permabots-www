@@ -8871,7 +8871,7 @@ ul.tab-nav li a i {
 -----------------------------------------------------------------*/
 
 
-.sidenav {
+. {
 	width: 100%;
 	padding: 0;
 	background-color: #FFF;
@@ -12893,5 +12893,67 @@ body:not(.no-transition) #wrapper,
 	transform: none!important;
 	margin:0!important;
 	padding:0!important
+}
+
+
+/* Sidebar ScrollSpy */
+.fixed {
+    position: fixed;
+}
+
+/* sidebar */
+.docs-sidebar {
+    padding-left: 1px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* all links */
+.docs-sidebar .nav>li>a {
+    color: #474747;
+    border-right: 4px solid transparent;
+    padding: 4px 2px;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+/* nested links */
+.docs-sidebar .nav .nav>li>a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 12px;
+    font-size: 12px;
+    background-color: transparent;
+}
+
+/* active & hover links */
+.docs-sidebar .nav>.active>a, 
+.docs-sidebar .nav>li>a:hover, 
+.docs-sidebar .nav>li>a:focus {
+    color: #333333;                 
+    text-decoration: none;          
+    background-color: transparent;
+    border-right-color: #333333; 
+}
+/* all active links */
+.docs-sidebar .nav>.active>a, 
+.docs-sidebar .nav>.active:hover>a,
+.docs-sidebar .nav>.active:focus>a {
+    font-weight: 700;
+}
+/* nested active links */
+.docs-sidebar .nav .nav>.active>a, 
+.docs-sidebar .nav .nav>.active:hover>a,
+.docs-sidebar .nav .nav>.active:focus>a {
+    font-weight: 500;
+}
+
+/* hide inactive nested list */
+.docs-sidebar .nav ul.nav {
+    display: none;           
+}
+/* show active nested list */
+.docs-sidebar .nav>.active>ul.nav {
+    display: block;           
 }
 
