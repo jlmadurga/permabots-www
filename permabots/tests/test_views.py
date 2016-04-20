@@ -468,18 +468,18 @@ class TestManageHandler(BaseManageTest):
     def test_create_validation_error_pattern(self):
         self.handler.delete()
         self.handler.pattern = '(?P<username>\w+'
-        self._test_create_validation_error('Not correct Regex')
+        self._test_create_validation_error('Not valid regular expression')
         
     def test_create_validation_error_text_template(self):
         self.handler.delete()
         self.handler.response.text_template = '<b>{{a}}'
-        self._test_create_validation_error('Not correct')
+        self._test_create_validation_error('Not correct HTML')
         
     def test_create_validation_error_keyboard_template(self):
         self.handler.delete()
-        self.handler.response.keyboard_template = '[["{{a}","asd"]]'
-        self._test_create_validation_error('Not correct')
-               
+        self.handler.response.keyboard_template = '[["{% if response.status == 200 %}{{a}}","asd"]]'
+        self._test_create_validation_error('Jinja error')
+
     def test_not_auth_create_redirected(self):
         self._test_not_auth_create_redirected()
         
@@ -495,15 +495,15 @@ class TestManageHandler(BaseManageTest):
         
     def test_update_validation_error_pattern(self):
         self.handler.pattern = '(?P<username>\w+'
-        self._test_update_validation_error('Not correct Regex')
+        self._test_update_validation_error('Not valid regular expression')
         
     def test_update_validation_error_text_template(self):
         self.handler.response.text_template = '<b>{{a}}'
-        self._test_update_validation_error('Not correct')
+        self._test_update_validation_error('Not correct HTML')
         
     def test_update_validation_error_keyboard_template(self):
         self.handler.response.keyboard_template = '[["{{a}","asd"]]'
-        self._test_update_validation_error('Not correct')
+        self._test_update_validation_error('Jinja error')
                
     def test_not_auth_update_redirected(self):
         self._test_not_auth_update_redirected()
@@ -542,12 +542,12 @@ class TestManageHook(BaseManageTest):
     def test_create_validation_error_text_template(self):
         self.hook.delete()
         self.hook.response.text_template = '<b>{{a}}'
-        self._test_create_validation_error('Not correct')
+        self._test_create_validation_error('Not correct HTML')
         
     def test_create_validation_error_keyboard_template(self):
         self.hook.delete()
         self.hook.response.keyboard_template = '[["{{a}","asd"]]'
-        self._test_create_validation_error('Not correct')
+        self._test_create_validation_error('Jinja error')
         
     def test_not_auth_create_redirected(self):
         self._test_not_auth_create_redirected()
@@ -564,11 +564,11 @@ class TestManageHook(BaseManageTest):
         
     def test_update_validation_error_text_template(self):
         self.hook.response.text_template = '<b>{{a}}'
-        self._test_update_validation_error('Not correct')
+        self._test_update_validation_error('Not correct HTML')
         
     def test_update_validation_error_keyboard_template(self):
         self.hook.response.keyboard_template = '[["{{a}","asd"]]'
-        self._test_update_validation_error('Not correct')
+        self._test_update_validation_error('Jinja error')
         
     def test_not_auth_update_redirected(self):
         self._test_not_auth_update_redirected()
@@ -606,7 +606,7 @@ class TestManageHandlerUrlParam(BaseManageTest):
     def test_create_validation_error(self):
         self.url_param.delete()
         self.url_param.value_template = "{{a}"
-        self._test_create_validation_error("Not correct")
+        self._test_create_validation_error("Jinja error")
                
     def test_not_auth_create_redirected(self):
         self._test_not_auth_create_redirected()
@@ -623,7 +623,7 @@ class TestManageHandlerUrlParam(BaseManageTest):
         
     def test_update_validation_error(self):
         self.url_param.value_template = "{{a}"
-        self._test_update_validation_error("Not correct")
+        self._test_update_validation_error("Jinja error")
                
     def test_not_auth_update_redirected(self):
         self._test_not_auth_update_redirected()
@@ -661,7 +661,7 @@ class TestManageHandlerHeaderParam(BaseManageTest):
     def test_create_validation_error(self):
         self.header_param.delete()
         self.header_param.value_template = "{{a}"
-        self._test_create_validation_error("Not correct")
+        self._test_create_validation_error("Jinja error")
                
     def test_not_auth_create_redirected(self):
         self._test_not_auth_create_redirected()
@@ -678,7 +678,7 @@ class TestManageHandlerHeaderParam(BaseManageTest):
         
     def test_update_validation_error(self):
         self.header_param.value_template = '{{a}'
-        self._test_update_validation_error('Not correct')
+        self._test_update_validation_error('Jinja error')
                
     def test_not_auth_update_redirected(self):
         self._test_not_auth_update_redirected()

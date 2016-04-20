@@ -92,22 +92,22 @@ class HandlerCreationForm(BaseCrispyForm):
     url_template = forms.CharField(label=_("Url template"), required=False,
                                    validators=[validators.validate_template],
                                    help_text='''In <a href="http://jinja.pocoo.org/">jinja2</a> format. Context: <code>pattern</code>, 
-                                            <code>env</code>, <code>update</code>, <code>state_context</code>.''')
+                                            <code>env</code>, <code>message</code>, <code>state_context</code>.''')
     method = forms.ChoiceField(label=_("Method"), widget=forms.RadioSelect, choices=Request.METHOD_CHOICES, required=False)
     data = forms.CharField(label=_("Data"), required=False, widget=forms.Textarea,
                            help_text=_('''Define JSON template. In <a href="http://jinja.pocoo.org/">jinja2</a> format. Context: 
-                                       <code>pattern</code>,<code>env</code>, <code>update</code>, <code>state_context</code>.'''))
+                                       <code>pattern</code>,<code>env</code>, <code>message</code>, <code>state_context</code>.'''))
     text_template = forms.CharField(label=_("Text template"), widget=forms.Textarea,
                                     validators=[validators.validate_template, validators.validate_telegram_text_html],
                                     help_text=_('''Text template. In <a href="http://jinja.pocoo.org/">jinja2</a> format. 
-                                                Context: <code>pattern</code>,<code>env</code>, <code>update</code>, 
+                                                Context: <code>pattern</code>,<code>env</code>, <code>message</code>, 
                                                 <code>state_context</code>, <code>response</code>.''')
                                     )
     keyboard_template = forms.CharField(label=_("Keyboard template"), widget=forms.Textarea, required=False,
                                         validators=[validators.validate_template, validators.validate_telegram_keyboard],
                                         help_text=_('''<a href="https://core.telegram.org/bots/api#replykeyboardmarkup">Telegram keyboard</a> template. 
                                                     In <a href="http://jinja.pocoo.org/">jinja2</a> format. 
-                                                    Context: <code>pattern</code>,<code>env</code>, <code>update</code>, <code>state_context</code>, 
+                                                    Context: <code>pattern</code>,<code>env</code>, <code>message</code>, <code>state_context</code>, 
                                                     <code>response</code>.'''))
     source_states = forms.ModelMultipleChoiceField(queryset=State.objects.all(), required=False,
                                                    help_text=_("In one of these states to execute"))

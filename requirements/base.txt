@@ -48,9 +48,4 @@ celery==3.1.21
 
 # Your custom requirements go here
 django-rest-swagger==0.3.5
-python-telegram-bot==3.3
-Jinja2==2.8
-requests==2.9.1
-shortuuid==0.4.3
-kik==1.0.6
--e git+https://github.com/jlmadurga/microbot.git@feature/kik_integration#egg=microbot
+microbot==1.3.0
