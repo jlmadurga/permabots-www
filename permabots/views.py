@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from permabots import forms
 from django.http import Http404
 
+
 class BaseBotView(LoginRequiredMixin):
     success_msg = None
     
@@ -151,7 +152,8 @@ class KikBotCreateView(BaseWithBotView, generic.CreateView):
         try:
             obj.save()
         except:
-            form.add_error('api-key', 'Kik Error. Check Token or try later.')
+            form.add_error('username', 'Kik Error. Check Kik username or try later.')
+            form.add_error('api_key', 'Kik Error. Check Kik API key or try later.')
             return self.form_invalid(form)
         else:
             bot = Bot.objects.get(pk=self.kwargs['bot_pk'])
