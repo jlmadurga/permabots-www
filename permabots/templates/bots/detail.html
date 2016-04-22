@@ -63,6 +63,31 @@
 		</div>
 	</div>
 	
+	<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Messenger Bot" %}</h4>
+			</div>
+
+			<div class="col_three_fifth nobottommargin col_last">
+				{% if object.messenger_bot %}
+				<ul class="list-group">
+					<li class="list-group-item"><b>Token</b><span class="badge">{{ object.messenger_bot.token }}</span></li>
+					
+				</ul>
+				<a href="{% url 'bot-messenger-update' object.pk object.messenger_bot.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Update</i></a>			
+				<a href="{% url 'bot-messenger-delete' object.pk object.messenger_bot.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Delete</i></a>		
+				
+				{% else %}
+				<a href="{% url 'bot-messenger-create' object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>				
+				{% endif %}
+			</div>
+
+		</div>
+	</div>
+	
 
 	<div class="section notopborder nomargin">
 

@@ -1,5 +1,6 @@
 from django import forms
-from microbot.models import Bot, Handler, Hook, Request, EnvironmentVar, UrlParam, HeaderParam, TelegramRecipient, State, TelegramBot, KikBot, KikRecipient
+from microbot.models import (Bot, Handler, Hook, Request, EnvironmentVar, UrlParam, HeaderParam, TelegramRecipient, 
+                             State, TelegramBot, KikBot, KikRecipient, MessengerBot, MessengerRecipient)
 from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, HTML
@@ -82,7 +83,35 @@ class KikBotUpdateForm(BaseCrispyForm):
         self.helper.layout = Layout(
             Field('enabled', css_class="bt-switch", data_on_color="success", data_off_color="danger"),
         )
-    
+
+class MessengerBotCreateForm(BaseCrispyForm):
+    enabled = forms.BooleanField(label="", required=False)
+     
+    class Meta:
+        model = MessengerBot
+        fields = ('token', 'enabled')
+        
+    def __init__(self, *args, **kwargs):
+        bot = kwargs.pop("bot")  # noqa
+        super(MessengerBotCreateForm, self).__init__(*args, **kwargs)
+        self.helper.layout = Layout(
+            Field('enabled', css_class="bt-switch", data_on_color="success", data_off_color="danger"),
+            Field('token', placeholder="facebook messenger token"),
+        )
+        
+class MessengerBotUpdateForm(BaseCrispyForm):
+    enabled = forms.BooleanField(label="", required=False)
+        
+    class Meta:
+        model = Bot
+        fields = ('enabled', )
+        
+    def __init__(self, *args, **kwargs):
+        super(MessengerBotUpdateForm, self).__init__(*args, **kwargs)
+        self.helper.layout = Layout(
+            Field('enabled', css_class="bt-switch", data_on_color="success", data_off_color="danger"),
+        )
+
 class HandlerCreationForm(BaseCrispyForm):
     name = forms.CharField(label=_("Name"))
     pattern = forms.CharField(label=_("Pattern"), validators=[validators.validate_pattern],
@@ -253,6 +282,12 @@ class KikRecipientForm(BaseCrispyForm):
     class Meta:
         model = KikRecipient
         fields = ('name', 'chat_id', 'username')     
+
+class MessengerRecipientForm(BaseCrispyForm):
+    
+    class Meta:
+        model = MessengerRecipient
+        fields = ('name', 'chat_id')     
 
 class StateForm(BaseCrispyForm):
     
