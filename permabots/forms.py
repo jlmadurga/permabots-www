@@ -199,7 +199,8 @@ class HookCreationForm(BaseCrispyForm):
     keyboard_template = forms.CharField(label=_("Keyboard template"), widget=forms.Textarea, required=False,
                                         validators=[validators.validate_template, validators.validate_telegram_keyboard],
                                         help_text=_('''<a href="https://core.telegram.org/bots/api#replykeyboardmarkup">Telegram keyboard</a> template. 
-                                                    In <a href="http://jinja.pocoo.org/">jinja2</a> format. Context: <code>env</code>, <code>data</code>, <code>emoji</code>.'''))
+                                                    In <a href="http://jinja.pocoo.org/">jinja2</a> format. Context: <code>env</code>, <code>data</code>, 
+                                                    <code>emoji</code>.'''))
 
     class Meta:
         model = Hook
