@@ -523,7 +523,7 @@ Content-Type: application/json
     "name": "Repositories",
     "enabled": true,
     "pattern": "Repos",
-    "request": {"url_template": "https://api.github.com/users/{% verbatim %}{{state_context.response.data.login}}/repos{% endverbatim %}", "method": "Get"},
+    "request": {"url_template": "https://api.github.com/users/{% verbatim %}{{state_context.started.pattern.username}}/repos{% endverbatim %}", "method": "Get"},
     "response": {"text_template": "Select a repository",
                  "keyboard_template": "{% verbatim %}[['Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
     },
@@ -542,7 +542,7 @@ Content-Type: application/json
   "pattern": "Repos",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/users/{% verbatim %}{{state_context.response.data.login}}/repos{% endverbatim %}",
+    "url_template": "https://api.github.com/users/{% verbatim %}{{state_context.started.pattern.username}}/repos{% endverbatim %}",
     "method": "Get",
     "data": null,
     "url_parameters": [],
@@ -701,7 +701,7 @@ Content-Type: application/json
     "request": {"url_template": "https://api.github.com/repos/{% verbatim %}{{pattern.username}}/{{ pattern.repo }}{% endverbatim %}",
                 "method": "Get"},
     "response": {"text_template": "{% verbatim %}{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>. {{ response.data.description}}{% else %} {{ response.data.name}}:{{response.data.html_url }}. {{ response.data.description }}{% endif %}{% endif %}{% endverbatim %}",
-                 "keyboard_template": "{% verbatim %}[['Back']{% for repo in state_context.response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
+                 "keyboard_template": "{% verbatim %}[['Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
     }
 }
 </code>
@@ -726,7 +726,7 @@ Content-Type: application/json
   },
   "response": {
     "text_template": "{% verbatim %}{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>. {{ response.data.description}}{% else %} {{ response.data.name}}:{{response.data.html_url }}. {{ response.data.description }}{% endif %}{% endif %}{% endverbatim %}",
-    "keyboard_template": "{% verbatim %}[['Back']{% for repo in state_context.response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
+    "keyboard_template": "{% verbatim %}[['Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
   },
   "target_state": null,
   "source_states": [],
@@ -769,7 +769,7 @@ Content-Type: application/json
     "name": "Back from Repo Detail",
     "enabled": true,
     "pattern": "Back",
-    "request": {"url_template": "https://api.github.com/users/{% verbatim %}{% for repo in state_context.response.data %}{% if loop.first %}{{ repo.owner.login}}{% endif %}{% endfor %}{% endverbatim %}",
+    "request": {"url_template": "https://api.github.com/users/{% verbatim %}{{state_context.started.pattern.username}}{% endverbatim %}",
                 "method": "Get"},
     "response": {"text_template": "{% verbatim %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }}:{{ response.data.html_url}}{% endif %}{% endverbatim %}",
                  "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}{% endverbatim %}"
@@ -789,7 +789,7 @@ Content-Type: application/json
   "pattern": "Back",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/users/{% verbatim %}{% for repo in state_context.response.data %}{% if loop.first %}{{ repo.owner.login}}{% endif %}{% endfor %}{% endverbatim %}",
+    "url_template": "https://api.github.com/users/{% verbatim %}{{ state_context.started.pattern.username}}{% endverbatim %}",
     "method": "Get",
     "data": null,
     "url_parameters": [],
