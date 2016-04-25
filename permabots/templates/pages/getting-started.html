@@ -26,6 +26,7 @@
         	<a href="#message-handlers" data-scrollto="#message-handlers">Message Handlers</a>
         	<ul class="nav nav-stacked">  
             	<li class=""><a href="#context" data-scrollto="#context">Context</a></li>
+            	<li class=""><a href="#emoji" data-scrollto="#emoji">Emoji</a></li>
             	<li class=""><a href="#pattern" data-scrollto="#pattern">Pattern</a></li>
             	<li class=""><a href="#request" data-scrollto="#request">Request</a></li>
             	<li class=""><a href="#response" data-scrollto="#response">Response</a></li>
@@ -234,7 +235,7 @@ Content-Type: application/json
   "request": {"url_template": "https://api.github.com/users/{% verbatim %}{{pattern.username }}{% endverbatim %}",
               "method": "Get"},
   "response": {"text_template": "{% verbatim %}{% if response.status == 404 %}{{ pattern.username }} not found. Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }}:{{ response.data.html_url }}{% endif %}{% endif %}{% endverbatim %}",
-               "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}{% endverbatim %}"
+               "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],[' {{ emoji.back_with_leftwards_arrow_above}}Back']]{% endif %}{% endverbatim %}"
                }
 }
 </code>
@@ -257,7 +258,7 @@ Content-Type: application/json
   },
   "response": {
     "text_template": "{% verbatim %}{% if response.status == 404 %}{{ pattern.username }} not found. Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }}:{{ response.data.html_url }}{% endif %}{% endif %}{% endverbatim %}",
-    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}{% endverbatim %}"
+    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['{{ emoji.back_with_leftwards_arrow_above}} Back']]{% endif %}{% endverbatim %}"
   },
   "target_state": null,
   "source_states": [],
@@ -265,6 +266,11 @@ Content-Type: application/json
 }
 </code>
 </pre>
+<section id="emoji" class="page-section">
+	<h4>Emoji</h4>
+</section>
+<p>Emoticons are attached to context as <code>emoji</code>. Use any emoticon from this <a href="http://apps.timwhitlock.info/emoji/tables/unicode">table</a> and use description in lower case and replacing spaces with <code>_</code>. Notice how we use it in our example <code>{% verbatim %}{{emoji.back_with_leftwards_arrow_above}}{% endverbatim %}}</code>.</p>
+
 <section id="pattern" class="page-section">
 			<h4>Pattern</h4>
 </section>
@@ -468,7 +474,7 @@ Content-Type: application/json
   },
   "response": {
     "text_template": "{% verbatim %}{% if response.status == 404 %}{{ pattern.username }} not found. Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }}:{{ response.data.html_url }}{% endif %}{% endif %}{% endverbatim %}",
-    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}{% endverbatim %}"
+    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['{{ emoji.back_with_leftwards_arrow_above}} Back']]{% endif %}{% endverbatim %}"
   },
   "target_state": {
     "id": "f8ae88db-c0ef-4c5e-abbb-69bf4c1b813a",
@@ -525,7 +531,7 @@ Content-Type: application/json
     "pattern": "Repos",
     "request": {"url_template": "https://api.github.com/users/{% verbatim %}{{state_context.started.pattern.username}}/repos{% endverbatim %}", "method": "Get"},
     "response": {"text_template": "Select a repository",
-                 "keyboard_template": "{% verbatim %}[['Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
+                 "keyboard_template": "{% verbatim %}[['{{ emoji.back_with_leftwards_arrow_above}} Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
     },
     "target_state": {"name": "Repo Detail"}
 }
@@ -550,7 +556,7 @@ Content-Type: application/json
   },
   "response": {
     "text_template": "Select a repository",
-    "keyboard_template": "{% verbatim %}[['Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
+    "keyboard_template": "{% verbatim %}[['{{ emoji.back_with_leftwards_arrow_above}} Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
   },
   "target_state": {
     "id": "c6f875cc-370d-46f1-b919-60eb6c40113a",
@@ -701,7 +707,7 @@ Content-Type: application/json
     "request": {"url_template": "https://api.github.com/repos/{% verbatim %}{{pattern.username}}/{{ pattern.repo }}{% endverbatim %}",
                 "method": "Get"},
     "response": {"text_template": "{% verbatim %}{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>. {{ response.data.description}}{% else %} {{ response.data.name}}:{{response.data.html_url }}. {{ response.data.description }}{% endif %}{% endif %}{% endverbatim %}",
-                 "keyboard_template": "{% verbatim %}[['Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
+                 "keyboard_template": "{% verbatim %}[['{{ emoji.back_with_leftwards_arrow_above}} Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
     }
 }
 </code>
@@ -726,7 +732,7 @@ Content-Type: application/json
   },
   "response": {
     "text_template": "{% verbatim %}{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>. {{ response.data.description}}{% else %} {{ response.data.name}}:{{response.data.html_url }}. {{ response.data.description }}{% endif %}{% endif %}{% endverbatim %}",
-    "keyboard_template": "{% verbatim %}[['Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
+    "keyboard_template": "{% verbatim %}[['{{ emoji.back_with_leftwards_arrow_above}} Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
   },
   "target_state": null,
   "source_states": [],
@@ -772,7 +778,7 @@ Content-Type: application/json
     "request": {"url_template": "https://api.github.com/users/{% verbatim %}{{state_context.started.pattern.username}}{% endverbatim %}",
                 "method": "Get"},
     "response": {"text_template": "{% verbatim %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }}:{{ response.data.html_url}}{% endif %}{% endverbatim %}",
-                 "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}{% endverbatim %}"
+                 "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['{{ emoji.back_with_leftwards_arrow_above}} Back']]{% endif %}{% endverbatim %}"
     },
     "target_state": {"name": "User Detail"}
 }
@@ -797,7 +803,7 @@ Content-Type: application/json
   },
   "response": {
     "text_template": "{% verbatim %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }}:{{ response.data.html_url}}{% endif %}{% endverbatim %}",
-    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}{% endverbatim %}"
+    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['{{ emoji.back_with_leftwards_arrow_above}} Back']]{% endif %}{% endverbatim %}"
   },
   "target_state": {
     "id": "f8ae88db-c0ef-4c5e-abbb-69bf4c1b813a",
