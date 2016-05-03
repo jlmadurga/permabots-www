@@ -237,6 +237,7 @@ INSTALLED_APPS += ('permabots.taskapp.celery.CeleryConfig',)
 # if you are not using the django database broker (e.g. rabbitmq, redis, memcached), you can remove the next line.
 INSTALLED_APPS += ('kombu.transport.django',)
 BROKER_URL = env("CELERY_BROKER_URL", default='django://')
+BROKER_POOL_LIMIT = env("BROKER_POOL_LIMIT", default=1)
 # END CELERY
 
 
