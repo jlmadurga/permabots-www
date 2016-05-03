@@ -105,6 +105,35 @@
 		</div>
 	</div>
 	
+		<div class="section notopborder nomargin">
+
+		<div class="container clearfix">
+
+			<div class="col_one_fifth topmargin-sm nobottommargin">
+				<h4>{% trans "Messenger Recipients" %}</h4>
+			</div>
+			
+			<div class="col_three_fifth nobottommargin col_last">
+				{% if object.bot.messenger_bot %}
+				<ul class="list-group">
+					{% for recipient in object.messenger_recipients.all %}
+						<li class="list-group-item"><b>name:recipient</b>
+						<div class="fright ">
+									<a href="{% url 'hook-messenger-recipient-update' bot.pk object.pk recipient.pk %}"><i class="i-plain i-small icon-edit"></i></a>
+									<a href="{% url 'hook-messenger-recipient-delete' bot.pk object.pk recipient.pk %}"><i class="i-plain i-small icon-remove"></i></a>
+						</div>
+						<div class="fright rightmargin-sm">{{ recipient.name }}:{{ recipient.chat_id }}</div></li>
+					{% endfor %}
+				<a href="{% url 'hook-messenger-recipient-create' bot.pk object.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Add</i></a>				
+				</ul>
+				{% else %}
+				<span class="label label-danger leftmargin-sm"> {% trans "Integrate Messenger Bot first" %}</span>
+				{% endif %}
+			</div>
+
+		</div>
+	</div>
+	
 	
 	<div class="fright">
 		<a href="{% url 'hook-update' object.bot.pk object.pk %}" class="button button-small button-border button-rounded"><i class="icon-edit"> Update</i></a>

@@ -1,5 +1,5 @@
 from microbot.models import Bot, Handler, Hook, EnvironmentVar, Request, Response, UrlParam, HeaderParam, TelegramRecipient, \
-    State, TelegramBot, KikBot, KikRecipient
+    State, TelegramBot, KikBot, KikRecipient, MessengerBot, MessengerRecipient
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from django.core.urlresolvers import reverse_lazy
@@ -176,6 +176,57 @@ class KikBotUpdateView(BaseWithBotView, generic.UpdateView):
     template_name = 'bots/kik/edit.html'
     success_msg = _("Kik Bot updated")
     form_class = forms.KikBotUpdateForm   
+    success_url = 'bot-detail'
+    super_class = generic.UpdateView
+    
+    def get_kwargs(self):
+        return {'pk': self.kwargs['bot_pk']}
+    
+class MessengerBotCreateView(BaseWithBotView, generic.CreateView):
+    model = MessengerBot
+    template_name = "bots/messenger/create.html"
+    super_class = generic.CreateView
+    success_msg = _("Messenger Bot created")
+    form_class = forms.MessengerBotCreateForm
+    success_url = 'bot-detail'
+    
+    def get_kwargs(self):
+        return {'pk': self.kwargs['bot_pk']}
+    
+    def get_form_kwargs(self):
+        kwargs = super(MessengerBotCreateView, self).get_form_kwargs()
+        kwargs['bot'] = Bot.objects.get(pk=self.kwargs['bot_pk'])
+        return kwargs
+       
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.owner = self.request.user
+        try:
+            obj.save()
+        except:
+            form.add_error('token', 'Messenger Error. Check Token or try later.')
+            return self.form_invalid(form)
+        else:
+            bot = Bot.objects.get(pk=self.kwargs['bot_pk'])
+            bot.messenger_bot = obj
+            bot.save()
+            return HttpResponseRedirect(self.get_success_url())
+
+class MessengerBotDeleteView(BaseWithBotView, generic.DeleteView):
+    model = MessengerBot
+    template_name = 'bots/messenger/confirm_delete.html'
+    success_msg = _("Messenger Bot deleted")
+    super_class = generic.DeleteView
+    success_url = 'bot-detail'
+    
+    def get_kwargs(self):
+        return {'pk': self.kwargs['bot_pk']}
+    
+class MessengerBotUpdateView(BaseWithBotView, generic.UpdateView):
+    model = MessengerBot
+    template_name = 'bots/messenger/edit.html'
+    success_msg = _("Messenger Bot updated")
+    form_class = forms.MessengerBotUpdateForm   
     success_url = 'bot-detail'
     super_class = generic.UpdateView
     
@@ -620,6 +671,39 @@ class KikRecipientUpdateView(BaseWithHookBotView, generic.UpdateView):
     super_class = generic.UpdateView
     success_url = 'hook-detail'
     success_msg = _("Hook Kik Recipient updated")
+    
+class MessengerRecipientCreateView(BaseWithHookBotView, generic.CreateView):
+    model = MessengerRecipient
+    form_class = forms.MessengerRecipientForm
+    template_name = "bots/hooks/recipients/messenger/create.html"
+    super_class = generic.CreateView
+    success_msg = _("Hook Messenger Recipient created")
+    success_url = 'hook-detail'
+    
+    def form_invalid(self, form):
+        return super(MessengerRecipientCreateView, self).form_invalid(form)
+    
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        hook_pk = self.kwargs['hook_pk']
+        obj.hook = Hook.objects.get(pk=hook_pk)
+        obj.save()     
+        return HttpResponseRedirect(self.get_success_url())
+    
+class MessengerRecipientDeleteView(BaseWithHookBotView, generic.DeleteView):
+    model = MessengerRecipient
+    template_name = 'bots/hooks/recipients/messenger/confirm_delete.html'
+    super_class = generic.DeleteView
+    success_url = 'hook-detail'
+    success_msg = _("Hook Messenger Recipient deleted")
+    
+class MessengerRecipientUpdateView(BaseWithHookBotView, generic.UpdateView):
+    model = MessengerRecipient
+    template_name = 'bots/hooks/recipients/messenger/edit.html'
+    form_class = forms.MessengerRecipientForm
+    super_class = generic.UpdateView
+    success_url = 'hook-detail'
+    success_msg = _("Hook Messenger Recipient updated")
     
 class StateCreateView(BaseWithBotView, generic.CreateView):
     model = State

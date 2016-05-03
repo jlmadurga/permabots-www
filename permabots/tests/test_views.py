@@ -1,8 +1,9 @@
 from django.test import RequestFactory
 from test_plus.test import TestCase
 from microbot.test.factories import BotFactory, HandlerFactory, HookFactory, UrlParamFactory, \
-    HeaderParamFactory, TelegramRecipientFactory, StateFactory, KikRecipientFactory
-from microbot.models import EnvironmentVar, Bot, Handler, Hook, UrlParam, HeaderParam, TelegramRecipient, State, TelegramBot, KikBot, KikRecipient
+    HeaderParamFactory, TelegramRecipientFactory, StateFactory, KikRecipientFactory, MessengerRecipientFactory
+from microbot.models import (EnvironmentVar, Bot, Handler, Hook, UrlParam, HeaderParam, TelegramRecipient, State,  
+                             TelegramBot, KikBot, KikRecipient, MessengerBot, MessengerRecipient)
 from microbot.models import TelegramUser as UserAPI
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
@@ -354,6 +355,47 @@ class TestManageKikBot(BaseManageTest):
     def test_create_ok(self):
         self.bot.kik_bot.delete()
         self.assertEqual(0, KikBot.objects.count())
+        self._test_create_ok()
+        
+    def test_not_auth_create_redirected(self):
+        self._test_not_auth_create_redirected()
+        
+    def test_delete_ok(self):
+        self._test_delete_ok()
+        
+    def test_not_auth_delete_redirected(self):
+        self._test_not_auth_delete_redirected()
+        
+    def test_update_ok(self):
+        self.bot.kik_bot.enabled = False
+        self._test_update_ok()
+        
+    def test_not_auth_update_redirected(self):
+        self._test_not_auth_update_redirected()
+        
+class TestManageMessengerBot(BaseManageTest):
+    url_name_create = 'bot-messenger-create'
+    url_name_delete = 'bot-messenger-delete'
+    url_name_update = 'bot-messenger-update'
+    model = MessengerBot
+    
+    def setUp(self):
+        super(TestManageMessengerBot, self).setUp()
+        self.url_kwargs_create = {'bot_pk': self.bot.pk}
+        self.url_kwargs_delete = self.url_kwargs_update = {'bot_pk': self.bot.pk,
+                                                           'pk': self.bot.messenger_bot.pk}
+        
+    def fill_form(self, form, create=False):
+        if create:
+            form['token'] = self.bot.messenger_bot.token
+        form['enabled'] = self.bot.kik_bot.enabled
+        
+    def assertObject(self, obj):
+        self.assertEqual(self.bot.messenger_bot.token, obj.token)
+        
+    def test_create_ok(self):
+        self.bot.messenger_bot.delete()
+        self.assertEqual(0, MessengerBot.objects.count())
         self._test_create_ok()
         
     def test_not_auth_create_redirected(self):
@@ -762,6 +804,54 @@ class TestManageHookKikRecipient(BaseManageTest):
         self.assertEqual(obj.chat_id, self.recipient.chat_id)
         self.assertEqual(obj.name, self.recipient.name)  
         self.assertEqual(obj.username, self.recipient.username)       
+        
+    def test_create_ok(self):
+        self.recipient.delete()
+        self._test_create_ok()
+               
+    def test_not_auth_create_redirected(self):
+        self._test_not_auth_create_redirected()
+        
+    def test_delete_ok(self):
+        self._test_delete_ok()
+        
+    def test_not_auth_delete_redirected(self):
+        self._test_not_auth_delete_redirected()
+
+    def test_update_ok(self):
+        self.recipient.chat_id = '234234234'
+        self._test_update_ok()
+                
+    def test_not_auth_update_redirected(self):
+        self._test_not_auth_update_redirected()
+        
+        
+class TestManageHookMessengerRecipient(BaseManageTest):
+    model = MessengerRecipient
+    url_name_create = 'hook-messenger-recipient-create'
+    url_name_delete = 'hook-messenger-recipient-delete'
+    url_name_update = 'hook-messenger-recipient-update'
+    
+    def setUp(self):
+        super(TestManageHookMessengerRecipient, self).setUp()
+        self.hook = HookFactory(bot=self.bot)
+        self.url_kwargs_create = {'bot_pk': self.bot.pk,
+                                  'hook_pk': self.hook.pk}
+        self.recipient_id = "recipientid"
+        self.recipient = MessengerRecipientFactory(hook=self.hook,
+                                                   chat_id=self.recipient_id)
+        self.url_kwargs_delete = self.url_kwargs_update = {'bot_pk': self.bot.pk,
+                                                           'hook_pk': self.hook.pk,
+                                                           'pk': self.recipient.pk}  
+        
+    def fill_form(self, form, create=False):
+        form['chat_id'] = self.recipient.chat_id
+        form['name'] = self.recipient.name     
+        
+    def assertObject(self, obj):
+        self.assertEqual(obj.hook, self.hook)
+        self.assertEqual(obj.chat_id, self.recipient.chat_id)
+        self.assertEqual(obj.name, self.recipient.name)  
         
     def test_create_ok(self):
         self.recipient.delete()
