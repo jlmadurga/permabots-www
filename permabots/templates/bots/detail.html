@@ -74,8 +74,8 @@
 			<div class="col_three_fifth nobottommargin col_last">
 				{% if object.messenger_bot %}
 				<ul class="list-group">
+					<li class="list-group-item"><b>Id</b> (for webhook verify token)<span class="badge">{{ object.messenger_bot.id}}</span></li>				
 					<li class="list-group-item"><b>Token</b><span class="badge">{{ object.messenger_bot.token|truncatechars:50 }}</span></li>
-					
 				</ul>
 				<a href="{% url 'bot-messenger-update' object.pk object.messenger_bot.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Update</i></a>			
 				<a href="{% url 'bot-messenger-delete' object.pk object.messenger_bot.pk %}" class="button button-mini button-border button-rounded"><i class="icon-edit"> Delete</i></a>		
