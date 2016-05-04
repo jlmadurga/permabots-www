@@ -20,6 +20,7 @@
             <ul class="nav nav-stacked">  
             	<li class=""><a href="#telegram-bot" data-scrollto="#telegram-bot">Telegram</a></li>
             	<li class=""><a href="#kik-bot" data-scrollto="#kik-bot">Kik</a></li>
+            	<li class=""><a href="#messenger-bot" data-scrollto="#messenger-bot">Facebook Messenger</a></li>
             </ul>
         </li>
 		<li class="">
@@ -28,6 +29,7 @@
             	<li class=""><a href="#context" data-scrollto="#context">Context</a></li>
             	<li class=""><a href="#emoji" data-scrollto="#emoji">Emoji</a></li>
             	<li class=""><a href="#pattern" data-scrollto="#pattern">Pattern</a></li>
+            	<li class=""><a href="#priority" data-scrollto="#pattern">Priority</a></li>
             	<li class=""><a href="#request" data-scrollto="#request">Request</a></li>
             	<li class=""><a href="#response" data-scrollto="#response">Response</a></li>
             </ul>
@@ -65,10 +67,13 @@
 				</div>
 			</div>
 		</div>
-		<p>This tutorial will have you building and deploying a chatbot that look for users and fetches some information from <em>Github</em> for Telegram and Kik platforms in minutes.
-		The tutorial assumes that you have:</p>
+		<p>This tutorial will have you building and deploying a chatbot that look for users and fetches some information from <em>Github</em> for Telegram, Kik and Facebook Messenger platforms in minutes.</p>
+		<img class="leftmargin-sm bottommargin-sm" src="{% static "images/getting-started/telegram_demo.gif" %}">
+		<img class="leftmargin-sm bottommargin-sm" src="{% static "images/getting-started/kik_demo.gif" %}">
+		<img class="leftmargin-sm bottommargin-sm" src="{% static "images/getting-started/messenger_demo.gif" %}">
+		<p>The tutorial assumes that you have:</p>
 		<ul class="iconlist leftmargin">
-			<li><i class="icon-ok-sign"></i>A <a href="https://telegram.org/">Telegram</a> and/or <a href="https://www.kik.com/">Kik</a>  account</li>
+			<li><i class="icon-ok-sign"></i>A <a href="https://telegram.org/">Telegram</a> and/or <a href="https://www.kik.com/">Kik</a>  and/or <a href="https://www.messenger.com/">>Facebook Messenger</a> account</li>
 			<li><i class="icon-ok-sign"></i>Registered in <a href="{% url 'account_signup' %}">Permabots.com</a></li>
 		</ul>
 		<p>This tutorial uses the Permabots API, so you need to set API token in header, <code>Authentication: Token <i>api_token</i></code>. However you can fulfill all this tutorial with the web dashboard.</p>
@@ -168,8 +173,39 @@ Content-Type: application/json
 }
 	</code>
 </pre>
+<section id="messenger-bot" class="page-section">
+			<h4>Facebook Messenger</h4>
+		</section>
+		<p>Follow the <a href="https://developers.facebook.com/docs/messenger-platform/quickstart">instructions</a> to create a Facebook Messenger bot. Permabots only requires <code>Page Access Token</code>. However you need to set
+		webhook url in your facebook account. Take <code>id</code> generated in permabots an use it to generate Callback Url <code>https://permabots.herokuapp.com/processing/messengerbot/permabots_messenger_bot_id/</code>and Verify Token.</p>
+<pre>
+	<code class="http">
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/messenger/ HTTP/1.1
+Host: www.permabots.com
+Authorization: Token yourpermabotstoken
+Content-Type: application/json
+{
+	"token": "your_page_access_token",
+	"enabled": true
+}
+	
+	</code>
+
+</pre>
+<pre>
+	<code class="json">
+{
+	"id": "8e51aa92-c664-4cz25-9re7-ffy8d1189ec34",
+	"token": "your_page_access_token",
+	"created_at": "2016-04-20T10:50:28.252650Z",
+	"updated_at": "2016-04-20T10:50:28.252683Z",
+	"enabled": true,
+}
+	</code>
+</pre>
 
 
+<p>In this example we should use <code>8e51aa92-c664-4cz25-9re7-ffy8d1189ec34</code> in Facebook Apps dashboard as <code>Verify Token</code> and for Callback Url generation <code>https://permabots.herokuapp.com/processing/messengerbot/8e51aa92-c664-4cz25-9re7-ffy8d1189ec34/</code></p>
 <p>These bots are created already <code>enabled</code> but it is useful to disable it until you have already built and consider it as ready.</p>
 <section id="message-handlers" class="heading-block page-section">
 <div class="fancy-title title-border">
@@ -187,25 +223,26 @@ Content-Type: application/json
 {
   "name": "Wellcome",
   "enabled": true,
-  "pattern": "/start",
-  "response": {"text_template": "Wellcome to PermaGithub Tutorial bot. Which github username do you want me to look for?",
+  "pattern": "/start|Hi|Hello|hi|hello",
+  "response": {"text_template": "Wellcome to PermaGithub Tutorial bot {{ emoji.waving_hand_sign}} \\n Which github username do you want me to look for?",
                "keyboard_template": ""
                }
+
 }
 </code>
 </pre>
 <pre>
 <code class="json">
 {
-  "id": "16edd905-5782-4df7-9a70-ceb628fe4a82",
-  "created_at": "2016-04-20T10:50:58.197981Z",
-  "updated_at": "2016-04-20T10:50:58.198034Z",
+  "id": "82bb4c1b-3a4e-4f52-bed4-0f1ddf2a62c6",
+  "created_at": "2016-05-04T14:21:05.251207Z",
+  "updated_at": "2016-05-04T14:21:05.251230Z",
   "name": "Wellcome",
-  "pattern": "/start",
+  "pattern": "/start|Hi|Hello|hi|hello",
   "enabled": true,
   "request": null,
   "response": {
-    "text_template": "Wellcome to PermaGithub Tutorial bot. Which github username do you want me to look for?",
+    "text_template": "Wellcome to PermaGithub Tutorial bot {{ emoji.waving_hand_sign}} \\n Which github username do you want me to look for?",
     "keyboard_template": ""
   },
   "target_state": null,
@@ -229,36 +266,37 @@ Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-  "name": "Github user",
+  "name": "Username",
   "enabled": true,
-  "pattern": "(?P&lt;username&gt;\\w+)",
-  "request": {"url_template": "https://api.github.com/users/{% verbatim %}{{pattern.username }}{% endverbatim %}",
+  "pattern": "(?P<username>\\w+)",
+  "request": {"url_template": "https://api.github.com/users/{{pattern.username }}",
               "method": "Get"},
-  "response": {"text_template": "{% verbatim %}{% if response.status == 404 %}{{ pattern.username }} not found. Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }}:{{ response.data.html_url }}{% endif %}{% endif %}{% endverbatim %}",
-               "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],[' {{ emoji.back_with_leftwards_arrow_above}}Back']]{% endif %}{% endverbatim %}"
+  "response": {"text_template": "{% if response.status == 404 %}{{ pattern.username }} not found {{ emoji.black_question_mark_ornament}} Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url }}{% endif %}{% endif %} it has {{ response.data.public_repos }} public repos {{ emoji.public_address_loudspeaker }} and {{ response.data.followers}} followers {{ emoji.family}} \\n View repos or go back",
+               "keyboard_template": "{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}"
                }
+
 }
 </code>
 </pre>
 <pre>
 <code class="json">
 {
-  "id": "2856c908-a71e-4ea4-b2af-23bced1ac456",
-  "created_at": "2016-04-20T10:51:22.006295Z",
-  "updated_at": "2016-04-20T10:51:22.006328Z",
-  "name": "Github user",
-  "pattern": "(?P&lt;username&gt;\\w+)",
+  "id": "1861cdd7-72aa-413e-b628-328c7087d00b",
+  "created_at": "2016-05-04T14:22:38.264460Z",
+  "updated_at": "2016-05-04T14:22:38.264492Z",
+  "name": "Username",
+  "pattern": "(?P<username>\\w+)",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/users/{% verbatim %}{{pattern.username }}{% endverbatim %}",
+    "url_template": "https://api.github.com/users/{{pattern.username }}",
     "method": "Get",
     "data": null,
     "url_parameters": [],
     "header_parameters": []
   },
   "response": {
-    "text_template": "{% verbatim %}{% if response.status == 404 %}{{ pattern.username }} not found. Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }}:{{ response.data.html_url }}{% endif %}{% endif %}{% endverbatim %}",
-    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['{{ emoji.back_with_leftwards_arrow_above}} Back']]{% endif %}{% endverbatim %}"
+    "text_template": "{% if response.status == 404 %}{{ pattern.username }} not found {{ emoji.black_question_mark_ornament}} Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url }}{% endif %}{% endif %} it has {{ response.data.public_repos }} public repos {{ emoji.public_address_loudspeaker }} and {{ response.data.followers}} followers {{ emoji.family}} \\n View repos or go back",
+    "keyboard_template": "{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}"
   },
   "target_state": null,
   "source_states": [],
@@ -275,6 +313,11 @@ Content-Type: application/json
 			<h4>Pattern</h4>
 </section>
 <p>Check the pattern, it has a regular expression <code>(?P&lt;username&gt;\\w+)</code> to get the word as a variable to later use it for generating the request to Github API. Patterns use regular expressions using <a href="https://docs.python.org/2/library/re.html#regular-expression-syntax">python syntax</a>. Variables obtained in pattern are attached to context in <code>pattern</code> variable.</p>
+<section id="priority" class="page-section">
+			<h4>Priority</h4>
+</section>
+<p>Some times more than one handler pattern can match the message received. To resolve this collision you can set priority weights. Higher the value is higher is the priority</p>
+
 <section id="request" class="page-section">
 			<h4>Request</h4>
 </section>
@@ -286,40 +329,7 @@ Content-Type: application/json
 <p>In our example, text response is generated using data returned by Github API. We also set a keyboard response to let the user get some of the Github user info. Notice the format is an array of arrays. </p>
 
 
-<div class="row bottommargin">
-<div class="col-sm-3">
-	<div class="thumbnail">
-		<img src="{% static "images/getting-started/telegram_github_start_username.jpg" %}" alt="Telegram Github start and username">
-	<div class="caption">
-	<i>Telegram wellcome and username handlers</i>
-	</div>
-	</div>
-</div>
-<div class="col-sm-3">
-	<div class="thumbnail">
-		<img src="{% static "images/getting-started/telegram_github_username_not_found.jpg" %}" alt="Telegram Github username not found">
-			<div class="caption">
-	<i>Telegram not found username</i>
-	</div>
-	</div>
-</div>
-<div class="col-sm-3">
-<div class="thumbnail">
-	<img src="{% static "images/getting-started/kik_github_start_username.jpg" %}" alt="Kik Github start and username">
-		<div class="caption">
-	<i>Kik wellcome and username handlers</i>
-	</div>
-	</div>
-</div>
-<div class="col-sm-3">
-<div class="thumbnail">
-	<img src="{% static "images/getting-started/kik_github_username_not_found.jpg" %}" alt="Kik Github username not found">
-		<div class="caption">
-	<i>Kik not found username</i>
-	</div>
-	</div>
-</div>
-</div>
+
 <section id="states" class="heading-block page-section">
 		<div class="fancy-title title-border">
 			<h3>States</h3>
@@ -333,7 +343,7 @@ Content-Type: application/json
 					<img align="middle" src="{% static "images/getting-started/state_machine_getting_started.jpg" %}" alt="Chatbot state machine">
 				</div>
 			</div>
-<p>The diagram give us some clues of what we still need to define. It is obvious we need three states ('Started', 'User Detail' and 'Repo Detail') but also that we need six handlers. Notice when receiving a <code>404</code> error is not handler.</p>
+<p>The diagram give us some clues of what we still need to define. It is obvious we need three states ('User', 'User Detail' and 'Repo Detail') but also that we need six handlers. Notice when receiving a <code>404</code> error is not handler.</p>
 <p>Let's create the states</p>
 <pre>
 	<code class="http">
@@ -342,17 +352,17 @@ Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-  "name": "Started"
+  "name": "Username"
 }
 	</code>
 </pre>
 <pre>
 <code class="json">
 {
-  "id": "89fbf696-0cd2-416c-8a93-9f72bc320d36",
-  "created_at": "2016-04-20T10:54:03.619208Z",
-  "updated_at": "2016-04-20T10:54:03.619238Z",
-  "name": "Started"
+  "id": "5bf426f6-3cd3-4999-ad4a-d282e107860e",
+  "created_at": "2016-05-04T14:22:54.272625Z",
+  "updated_at": "2016-05-04T14:22:54.272657Z",
+  "name": "Username"
 }
 </code>
 </pre>
@@ -371,9 +381,9 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "f8ae88db-c0ef-4c5e-abbb-69bf4c1b813a",
-  "created_at": "2016-04-20T10:54:22.353966Z",
-  "updated_at": "2016-04-20T10:54:22.354016Z",
+  "id": "dfdab2ff-d50c-4d6f-8e47-fc4ab5399559",
+  "created_at": "2016-05-04T14:23:10.262180Z",
+  "updated_at": "2016-05-04T14:23:10.262211Z",
   "name": "User Detail"
 }
 </code>
@@ -386,17 +396,17 @@ Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-  "name": "Repo Detail"
+  "name": "Repo"
 }
 </code>
 </pre>
 <pre>
 <code class="json">
 {
-  "id": "c6f875cc-370d-46f1-b919-60eb6c40113a",
-  "created_at": "2016-04-20T10:54:35.333330Z",
-  "updated_at": "2016-04-20T10:54:35.333359Z",
-  "name": "Repo Detail"
+  "id": "fce06ff0-889f-400c-a01a-99f90c9f48be",
+  "created_at": "2016-05-04T14:23:24.058554Z",
+  "updated_at": "2016-05-04T14:23:24.058601Z",
+  "name": "Repo"
 }
 </code>
 </pre>
@@ -407,12 +417,12 @@ Content-Type: application/json
 
 <pre>
 	<code class="http">
-PUT /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/16edd905-5782-4df7-9a70-ceb628fe4a82/ HTTP/1.1
+PUT /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/82bb4c1b-3a4e-4f52-bed4-0f1ddf2a62c6/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-    "target_state": {"name": "Started"}
+    "target_state": {"name": "Username"}
 }
 </code>
 
@@ -420,22 +430,22 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "16edd905-5782-4df7-9a70-ceb628fe4a82",
-  "created_at": "2016-04-20T10:50:58.197981Z",
-  "updated_at": "2016-04-20T10:54:51.853027Z",
+  "id": "82bb4c1b-3a4e-4f52-bed4-0f1ddf2a62c6",
+  "created_at": "2016-05-04T14:21:05.251207Z",
+  "updated_at": "2016-05-04T14:24:14.510917Z",
   "name": "Wellcome",
-  "pattern": "/start",
+  "pattern": "/start|Hi|Hello|hi|hello",
   "enabled": true,
   "request": null,
   "response": {
-    "text_template": "Wellcome to PermaGithub Tutorial bot. Which github username do you want me to look for?",
+    "text_template": "Wellcome to PermaGithub Tutorial bot {{ emoji.waving_hand_sign}} \\n Which github username do you want me to look for?",
     "keyboard_template": ""
   },
   "target_state": {
-    "id": "89fbf696-0cd2-416c-8a93-9f72bc320d36",
-    "created_at": "2016-04-20T10:54:03.619208Z",
-    "updated_at": "2016-04-20T10:54:03.619238Z",
-    "name": "Started"
+    "id": "5bf426f6-3cd3-4999-ad4a-d282e107860e",
+    "created_at": "2016-05-04T14:22:54.272625Z",
+    "updated_at": "2016-05-04T14:22:54.272657Z",
+    "name": "Username"
   },
   "source_states": [],
   "priority": 0
@@ -445,12 +455,12 @@ Content-Type: application/json
 
 <pre>
 <code class="http">
-PUT /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/2856c908-a71e-4ea4-b2af-23bced1ac456/ HTTP/1.1
+PUT /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/1861cdd7-72aa-413e-b628-328c7087d00b/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-	"target_state": {"name": "User Detail"}
+"target_state": {"name": "User Detail"}
 }
 </code>
 
@@ -459,27 +469,27 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "2856c908-a71e-4ea4-b2af-23bced1ac456",
-  "created_at": "2016-04-20T10:51:22.006295Z",
-  "updated_at": "2016-04-20T10:55:07.834678Z",
-  "name": "Github user",
-  "pattern": "(?P&lt;username&gt;\\w+)",
+  "id": "1861cdd7-72aa-413e-b628-328c7087d00b",
+  "created_at": "2016-05-04T14:22:38.264460Z",
+  "updated_at": "2016-05-04T14:24:35.748834Z",
+  "name": "Username",
+  "pattern": "(?P<username>\\w+)",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/users/{% verbatim %}{{pattern.username }}{% endverbatim %}",
+    "url_template": "https://api.github.com/users/{{pattern.username }}",
     "method": "Get",
     "data": null,
     "url_parameters": [],
     "header_parameters": []
   },
   "response": {
-    "text_template": "{% verbatim %}{% if response.status == 404 %}{{ pattern.username }} not found. Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }}:{{ response.data.html_url }}{% endif %}{% endif %}{% endverbatim %}",
-    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['{{ emoji.back_with_leftwards_arrow_above}} Back']]{% endif %}{% endverbatim %}"
+    "text_template": "{% if response.status == 404 %}{{ pattern.username }} not found {{ emoji.black_question_mark_ornament}} Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url }}{% endif %}{% endif %} it has {{ response.data.public_repos }} public repos {{ emoji.public_address_loudspeaker }} and {{ response.data.followers}} followers {{ emoji.family}} \\n View repos or go back",
+    "keyboard_template": "{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}"
   },
   "target_state": {
-    "id": "f8ae88db-c0ef-4c5e-abbb-69bf4c1b813a",
-    "created_at": "2016-04-20T10:54:22.353966Z",
-    "updated_at": "2016-04-20T10:54:22.354016Z",
+    "id": "dfdab2ff-d50c-4d6f-8e47-fc4ab5399559",
+    "created_at": "2016-05-04T14:23:10.262180Z",
+    "updated_at": "2016-05-04T14:23:10.262211Z",
     "name": "User Detail"
   },
   "source_states": [],
@@ -491,12 +501,12 @@ Content-Type: application/json
 
 <pre>
 	<code class="http">	
-POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/2856c908-a71e-4ea4-b2af-23bced1ac456/sourcestates/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/1861cdd7-72aa-413e-b628-328c7087d00b/sourcestates/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-    "name": "Started"
+    "name": "Username"
 }
 	</code>
 
@@ -504,10 +514,10 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "89fbf696-0cd2-416c-8a93-9f72bc320d36",
-  "created_at": "2016-04-20T10:54:03.619208Z",
-  "updated_at": "2016-04-20T10:54:03.619238Z",
-  "name": "Started"
+  "id": "5bf426f6-3cd3-4999-ad4a-d282e107860e",
+  "created_at": "2016-05-04T14:22:54.272625Z",
+  "updated_at": "2016-05-04T14:22:54.272657Z",
+  "name": "Username"
 }
 </code>
 </pre>
@@ -526,14 +536,15 @@ Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-    "name": "Repositories",
+    "name": "Repos",
     "enabled": true,
     "pattern": "Repos",
-    "request": {"url_template": "https://api.github.com/users/{% verbatim %}{{state_context.started.pattern.username}}/repos{% endverbatim %}", "method": "Get"},
+    "request": {"url_template": "https://api.github.com/users/{{state_context.username.pattern.username}}/repos", "method": "Get"},
     "response": {"text_template": "Select a repository",
-                 "keyboard_template": "{% verbatim %}[['{{ emoji.back_with_leftwards_arrow_above}} Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
+                 "keyboard_template": "[['Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]"
     },
-    "target_state": {"name": "Repo Detail"}
+    "target_state": {"name": "Repo"}
+    
 }
 </code>
 
@@ -541,14 +552,14 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "46e65da2-8439-4603-aef7-12426908fb32",
-  "created_at": "2016-04-20T10:55:43.087044Z",
-  "updated_at": "2016-04-20T10:55:43.087086Z",
-  "name": "Repositories",
+  "id": "dbb5d6f1-1a51-4db0-a9f3-b639a4064a94",
+  "created_at": "2016-05-04T14:25:11.670401Z",
+  "updated_at": "2016-05-04T14:25:11.670424Z",
+  "name": "Repos",
   "pattern": "Repos",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/users/{% verbatim %}{{state_context.started.pattern.username}}/repos{% endverbatim %}",
+    "url_template": "https://api.github.com/users/{{state_context.username.pattern.username}}/repos",
     "method": "Get",
     "data": null,
     "url_parameters": [],
@@ -556,13 +567,13 @@ Content-Type: application/json
   },
   "response": {
     "text_template": "Select a repository",
-    "keyboard_template": "{% verbatim %}[['{{ emoji.back_with_leftwards_arrow_above}} Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
+    "keyboard_template": "[['Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]"
   },
   "target_state": {
-    "id": "c6f875cc-370d-46f1-b919-60eb6c40113a",
-    "created_at": "2016-04-20T10:54:35.333330Z",
-    "updated_at": "2016-04-20T10:54:35.333359Z",
-    "name": "Repo Detail"
+    "id": "fce06ff0-889f-400c-a01a-99f90c9f48be",
+    "created_at": "2016-05-04T14:23:24.058554Z",
+    "updated_at": "2016-05-04T14:23:24.058601Z",
+    "name": "Repo"
   },
   "source_states": [],
   "priority": 0
@@ -573,7 +584,7 @@ Content-Type: application/json
 
 <pre>
 <code class="http">
-POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/46e65da2-8439-4603-aef7-12426908fb32/sourcestates/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/dbb5d6f1-1a51-4db0-a9f3-b639a4064a94/sourcestates/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
@@ -586,48 +597,15 @@ Content-Type: application/json
 <pre>
 	<code class="json">
 {
-	"id": "f8ae88db-c0ef-4c5e-abbb-69bf4c1b813a",
-	"created_at": "2016-04-20T10:54:22.353966Z",
-	"updated_at": "2016-04-20T10:54:22.354016Z",
-	"name": "User Detail"
+  "id": "dfdab2ff-d50c-4d6f-8e47-fc4ab5399559",
+  "created_at": "2016-05-04T14:23:10.262180Z",
+  "updated_at": "2016-05-04T14:23:10.262211Z",
+  "name": "User Detail"
 }
 	</code>
 
 </pre>
-<div class="row bottommargin">
-<div class="col-sm-3">
-<div class="thumbnail">
-	<img src="{% static "images/getting-started/telegram_github_repository_selection.jpg" %}" alt="Telegram select Github repository">
-			<div class="caption">
-	<i>Telegram after selecting Repos</i>
-	</div>
-	</div>
-</div>
-<div class="col-sm-3">
-<div class="thumbnail">
-	<img src="{% static "images/getting-started/telegram_github_username_back.jpg" %}" alt="Telegram back username Github">
-			<div class="caption">
-	<i>Telegram after selecting Back</i>
-	</div>
-	</div>
-</div>
-<div class="col-sm-3">
-<div class="thumbnail">
-	<img src="{% static "images/getting-started/kik_github_repository_selection.jpg" %}" alt="Kik select Github repository">
-			<div class="caption">
-	<i>Kik after selecting Repos</i>
-	</div>
-	</div>
-</div>
-<div class="col-sm-3">
-<div class="thumbnail">
-	<img src="{% static "images/getting-started/kik_github_username_back.jpg" %}" alt="Kik back username Github">
-			<div class="caption">
-	<i>Kik after selecting Back</i>
-	</div>
-	</div>
-</div>
-</div>
+
 <pre>
 <code class="http">
 POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/ HTTP/1.1
@@ -635,13 +613,14 @@ Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-	"name": "Back from User Detail",
+    "name": "Back from User Detail",
     "enabled": true,
     "pattern": "Back",
     "response": {"text_template": "Type github username do you want me to search?",
                  "keyboard_template": ""
     },
-    "target_state" : {"name": "Started"}
+    "target_state" : {"name": "Username"}
+    
 }
 </code>
 
@@ -649,9 +628,9 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "d7f9fb65-9562-41d8-9435-4d0a0ecc6b1e",
-  "created_at": "2016-04-20T10:57:17.112346Z",
-  "updated_at": "2016-04-20T10:57:17.112381Z",
+  "id": "f9458cb7-db8a-4280-a951-d12c107ca707",
+  "created_at": "2016-05-04T14:26:06.774088Z",
+  "updated_at": "2016-05-04T14:26:06.774120Z",
   "name": "Back from User Detail",
   "pattern": "Back",
   "enabled": true,
@@ -661,10 +640,10 @@ Content-Type: application/json
     "keyboard_template": ""
   },
   "target_state": {
-    "id": "89fbf696-0cd2-416c-8a93-9f72bc320d36",
-    "created_at": "2016-04-20T10:54:03.619208Z",
-    "updated_at": "2016-04-20T10:54:03.619238Z",
-    "name": "Started"
+    "id": "5bf426f6-3cd3-4999-ad4a-d282e107860e",
+    "created_at": "2016-05-04T14:22:54.272625Z",
+    "updated_at": "2016-05-04T14:22:54.272657Z",
+    "name": "Username"
   },
   "source_states": [],
   "priority": 0
@@ -674,12 +653,12 @@ Content-Type: application/json
 
 <pre>
 <code class="http">
-POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/d7f9fb65-9562-41d8-9435-4d0a0ecc6b1e/sourcestates/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/f9458cb7-db8a-4280-a951-d12c107ca707/sourcestates/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-	"name": "User Detail"
+    "name": "User Detail"
 }
 </code>
 </pre>
@@ -687,9 +666,9 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "f8ae88db-c0ef-4c5e-abbb-69bf4c1b813a",
-  "created_at": "2016-04-20T10:54:22.353966Z",
-  "updated_at": "2016-04-20T10:54:22.354016Z",
+  "id": "dfdab2ff-d50c-4d6f-8e47-fc4ab5399559",
+  "created_at": "2016-05-04T14:23:10.262180Z",
+  "updated_at": "2016-05-04T14:23:10.262211Z",
   "name": "User Detail"
 }
 </code>
@@ -703,11 +682,11 @@ Content-Type: application/json
 {
     "name": "Repo Detail",
     "enabled": true,
-    "pattern": "(?P&lt;username&gt;.+)/(?P&lt;repo&gt;.+)",
-    "request": {"url_template": "https://api.github.com/repos/{% verbatim %}{{pattern.username}}/{{ pattern.repo }}{% endverbatim %}",
+    "pattern": "(?P<repo>.+)",
+    "request": {"url_template": "https://api.github.com/repos/{{state_context.username.pattern.username}}/{{ pattern.repo }}",
                 "method": "Get"},
-    "response": {"text_template": "{% verbatim %}{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>. {{ response.data.description}}{% else %} {{ response.data.name}}:{{response.data.html_url }}. {{ response.data.description }}{% endif %}{% endif %}{% endverbatim %}",
-                 "keyboard_template": "{% verbatim %}[['{{ emoji.back_with_leftwards_arrow_above}} Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
+    "response": {"text_template": "{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found {{ emoji.cross_mark}}\\n Select one from menu{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>: {{ response.data.description}}{% else %} {{ response.data.name}} with url {{response.data.html_url }}: {{ response.data.description }}{% endif %}\\n Select repo or go back{% endif %}",
+                 "keyboard_template": "[['Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]"
     }
 }
 </code>
@@ -717,22 +696,22 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "3f283422-eb63-4d61-82e3-6847fad38ec0",
-  "created_at": "2016-04-20T10:58:10.801820Z",
-  "updated_at": "2016-04-20T10:58:10.801844Z",
+  "id": "fa00fc42-48f2-4668-a9b5-e37aceda26e1",
+  "created_at": "2016-05-04T14:27:29.766527Z",
+  "updated_at": "2016-05-04T14:27:29.766570Z",
   "name": "Repo Detail",
-  "pattern": "(?P&lt;username&gt;.+)/(?P&lt;repo&gt;.+)",
+  "pattern": "(?P<repo>.+)",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/repos/{% verbatim %}{{pattern.username}}/{{ pattern.repo }}{% endverbatim %}",
+    "url_template": "https://api.github.com/repos/{{state_context.username.pattern.username}}/{{ pattern.repo }}",
     "method": "Get",
     "data": null,
     "url_parameters": [],
     "header_parameters": []
   },
   "response": {
-    "text_template": "{% verbatim %}{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>. {{ response.data.description}}{% else %} {{ response.data.name}}:{{response.data.html_url }}. {{ response.data.description }}{% endif %}{% endif %}{% endverbatim %}",
-    "keyboard_template": "{% verbatim %}[['{{ emoji.back_with_leftwards_arrow_above}} Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.full_name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
+    "text_template": "{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found {{ emoji.cross_mark}}\\n Select one from menu{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>: {{ response.data.description}}{% else %} {{ response.data.name}} with url {{response.data.html_url }}: {{ response.data.description }}{% endif %}\\n Select repo or go back{% endif %}",
+    "keyboard_template": "[['Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]"
   },
   "target_state": null,
   "source_states": [],
@@ -744,23 +723,25 @@ Content-Type: application/json
 
 <pre>
 <code class="http">
-POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/3f283422-eb63-4d61-82e3-6847fad38ec0/sourcestates/ HTTP/1.1
+
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/fa00fc42-48f2-4668-a9b5-e37aceda26e1/sourcestates/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-    "name": "Repo Detail"
+    "name": "Repo"
 }
 </code>
 
 </pre>
 <pre>
 <code class="json">
+}
 {
-  "id": "c6f875cc-370d-46f1-b919-60eb6c40113a",
-  "created_at": "2016-04-20T10:54:35.333330Z",
-  "updated_at": "2016-04-20T10:54:35.333359Z",
-  "name": "Repo Detail"
+  "id": "fce06ff0-889f-400c-a01a-99f90c9f48be",
+  "created_at": "2016-05-04T14:23:24.058554Z",
+  "updated_at": "2016-05-04T14:23:24.058601Z",
+  "name": "Repo"
 }
 </code>
 </pre>
@@ -775,12 +756,13 @@ Content-Type: application/json
     "name": "Back from Repo Detail",
     "enabled": true,
     "pattern": "Back",
-    "request": {"url_template": "https://api.github.com/users/{% verbatim %}{{state_context.started.pattern.username}}{% endverbatim %}",
+    "request": {"url_template": "https://api.github.com/users/{{ state_context.username.pattern.username}}",
                 "method": "Get"},
-    "response": {"text_template": "{% verbatim %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }}:{{ response.data.html_url}}{% endif %}{% endverbatim %}",
-                 "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['{{ emoji.back_with_leftwards_arrow_above}} Back']]{% endif %}{% endverbatim %}"
+    "response": {"text_template": "{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url}}{% endif %} it has {{ response.data.public_repos }} public repos and {{ response.data.followers}} followers\\n View repos or go back",
+                 "keyboard_template": "{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}"
     },
-    "target_state": {"name": "User Detail"}
+    "target_state": {"name": "User Detail"},
+    "priority": 1,
 }
 </code>
 </pre>
@@ -788,31 +770,31 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "12f857bc-161a-4777-9dc6-cd63bc7e38b2",
-  "created_at": "2016-04-20T10:58:57.098603Z",
-  "updated_at": "2016-04-20T10:58:57.098627Z",
+  "id": "72264903-0748-45fd-b9a4-78a2e1185f22",
+  "created_at": "2016-05-04T14:28:18.617941Z",
+  "updated_at": "2016-05-04T14:28:18.617965Z",
   "name": "Back from Repo Detail",
   "pattern": "Back",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/users/{% verbatim %}{{ state_context.started.pattern.username}}{% endverbatim %}",
+    "url_template": "https://api.github.com/users/{{ state_context.username.pattern.username}}",
     "method": "Get",
     "data": null,
     "url_parameters": [],
     "header_parameters": []
   },
   "response": {
-    "text_template": "{% verbatim %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }}:{{ response.data.html_url}}{% endif %}{% endverbatim %}",
-    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['{{ emoji.back_with_leftwards_arrow_above}} Back']]{% endif %}{% endverbatim %}"
+    "text_template": "{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url}}{% endif %} it has {{ response.data.public_repos }} public repos and {{ response.data.followers}} followers\\n View repos or go back",
+    "keyboard_template": "{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}"
   },
   "target_state": {
-    "id": "f8ae88db-c0ef-4c5e-abbb-69bf4c1b813a",
-    "created_at": "2016-04-20T10:54:22.353966Z",
-    "updated_at": "2016-04-20T10:54:22.354016Z",
+    "id": "dfdab2ff-d50c-4d6f-8e47-fc4ab5399559",
+    "created_at": "2016-05-04T14:23:10.262180Z",
+    "updated_at": "2016-05-04T14:23:10.262211Z",
     "name": "User Detail"
   },
   "source_states": [],
-  "priority": 0
+  "priority": 1
 }
 </code>
 
@@ -821,12 +803,12 @@ Content-Type: application/json
 
 <pre>
 <code class="http">
-POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/12f857bc-161a-4777-9dc6-cd63bc7e38b2/sourcestates/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/72264903-0748-45fd-b9a4-78a2e1185f22/sourcestates/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-    "name": "Repo Detail"
+    "name": "Repo"
 }
 </code>
 </pre>
@@ -834,14 +816,14 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "c6f875cc-370d-46f1-b919-60eb6c40113a",
-  "created_at": "2016-04-20T10:54:35.333330Z",
-  "updated_at": "2016-04-20T10:54:35.333359Z",
-  "name": "Repo Detail"
+  "id": "fce06ff0-889f-400c-a01a-99f90c9f48be",
+  "created_at": "2016-05-04T14:23:24.058554Z",
+  "updated_at": "2016-05-04T14:23:24.058601Z",
+  "name": "Repo"
 }
 </code>
-
 </pre>
+<p>Notice how we set priority to this handler ir order to avoid collisions. Otherwise it will take "Back" as parameter to look for repository details.</p>
 <div class="row bottommargin">
 <div class="col-sm-3">
 <div class="thumbnail">
@@ -904,8 +886,8 @@ Content-Type: application/json
 <code class="json">
 {
   "id": "e2c2a556-a493-4594-9e4a-f7966a8945c6",
-  "created_at": "2016-04-20T10:59:57.765875Z",
-  "updated_at": "2016-04-20T10:59:57.765913Z",
+  "created_at": "2016-05-04T14:29:40.825853Z",
+  "updated_at": "2016-05-04T14:29:40.825902Z",
   "key": "client_id",
   "value": "yourgithubclientid"
 }
@@ -930,8 +912,8 @@ Content-Type: application/json
 <code class="json">
 {
   "id": "0f65b649-c95f-41a7-b600-9f06c713132e",
-  "created_at": "2016-04-20T11:00:20.963746Z",
-  "updated_at": "2016-04-20T11:00:20.963796Z",
+  "created_at": "2016-05-04T14:29:40.825853Z",
+  "updated_at": "2016-05-04T14:29:40.825902Z",
   "key": "client_secret",
   "value": "yourgithubclientsecret"
 }
@@ -948,13 +930,13 @@ Content-Type: application/json
 <p>Handler requests can have some parameters in the url and in the header. In our bot we should attach some url parameters to the Github request to avoid getting banned quickly. Don't hard code these values, use <code>env</code>.</p>
 <pre>
 <code class="http">
-POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/2856c908-a71e-4ea4-b2af-23bced1ac456/urlparams/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/1861cdd7-72aa-413e-b628-328c7087d00b/urlparams/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_secret",
-    "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
+    "value_template": "{{env.client_secret}}"
     
 }
 </code>
@@ -962,23 +944,23 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "6a8810b1-2631-4a8a-b5fb-8c19f217e2c8",
-  "created_at": "2016-04-20T11:00:35.897744Z",
-  "updated_at": "2016-04-20T11:00:35.897773Z",
+  "id": "e83566ae-1d8c-4ab7-96e5-66fdb17d9b17",
+  "created_at": "2016-05-04T14:30:30.780113Z",
+  "updated_at": "2016-05-04T14:30:30.780167Z",
   "key": "client_secret",
-  "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
+  "value_template": "{{env.client_secret}}"
 }
 </code>
 </pre>
 <pre>
 <code class="http">
-POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/2856c908-a71e-4ea4-b2af-23bced1ac456/urlparams/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/1861cdd7-72aa-413e-b628-328c7087d00b/urlparams/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_id",
-    "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
+    "value_template": "{{env.client_id}}"
     
 }
 </code>
@@ -986,23 +968,23 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "cb70fbae-374a-48bd-91b2-f8ad4b819e7a",
-  "created_at": "2016-04-20T11:00:59.351707Z",
-  "updated_at": "2016-04-20T11:00:59.351737Z",
+  "id": "f2c92c74-b1d2-4d5f-a702-8aafe9a13cb8",
+  "created_at": "2016-05-04T14:30:46.335365Z",
+  "updated_at": "2016-05-04T14:30:46.335395Z",
   "key": "client_id",
-  "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
+  "value_template": "{{env.client_id}}"
 }
 </code>
 </pre>
 <pre>
 <code class="http">
-/api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/46e65da2-8439-4603-aef7-12426908fb32/urlparams/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/dbb5d6f1-1a51-4db0-a9f3-b639a4064a94/urlparams/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_secret",
-    "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
+    "value_template": "{{env.client_secret}}"
     
 }
 </code>
@@ -1010,23 +992,23 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "48c9559a-8a41-4b7b-b8f2-642b4f159e5d",
-  "created_at": "2016-04-20T11:01:12.046069Z",
-  "updated_at": "2016-04-20T11:01:12.046120Z",
+  "id": "eb2ff24e-6352-47b5-8907-000355a10062",
+  "created_at": "2016-05-04T14:31:01.181979Z",
+  "updated_at": "2016-05-04T14:31:01.182008Z",
   "key": "client_secret",
-  "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
+  "value_template": "{{env.client_secret}}"
 }
 </code>
 </pre>
 <pre>
 <code class="http">
-POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/46e65da2-8439-4603-aef7-12426908fb32/urlparams/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/dbb5d6f1-1a51-4db0-a9f3-b639a4064a94/urlparams/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_id",
-    "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
+    "value_template": "{{env.client_id}}"
     
 }
 </code>
@@ -1034,23 +1016,23 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "45b64bb0-ceff-4a84-a7e2-de81b517b759",
-  "created_at": "2016-04-20T11:01:24.589706Z",
-  "updated_at": "2016-04-20T11:01:24.589756Z",
+  "id": "ce2cecc5-e81a-47a5-94ec-bf799d22eced",
+  "created_at": "2016-05-04T14:31:12.475815Z",
+  "updated_at": "2016-05-04T14:31:12.475866Z",
   "key": "client_id",
-  "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
+  "value_template": "{{env.client_id}}"
 }
 </code>
 </pre>
 <pre>
 <code class="http">
-/api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/12f857bc-161a-4777-9dc6-cd63bc7e38b2/urlparams/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/72264903-0748-45fd-b9a4-78a2e1185f22/urlparams/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_secret",
-    "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
+    "value_template": "{{env.client_secret}}"
     
 }
 </code>
@@ -1058,23 +1040,23 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "80bb5411-3613-4c77-92e2-643cb1ac926f",
-  "created_at": "2016-04-20T11:01:36.120225Z",
-  "updated_at": "2016-04-20T11:01:36.120271Z",
+  "id": "5d94182d-a37c-4b02-9942-0ef05051a838",
+  "created_at": "2016-05-04T14:31:22.401526Z",
+  "updated_at": "2016-05-04T14:31:22.401556Z",
   "key": "client_secret",
-  "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
+  "value_template": "{{env.client_secret}}"
 }
 </code>
 </pre>
 <pre>
 <code class="http">
-POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/12f857bc-161a-4777-9dc6-cd63bc7e38b2/urlparams/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/72264903-0748-45fd-b9a4-78a2e1185f22/urlparams/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_id",
-    "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
+    "value_template": "{{env.client_id}}"
     
 }
 </code>
@@ -1082,23 +1064,23 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "e7de6890-b87d-492c-8ddd-0f988d14a807",
-  "created_at": "2016-04-20T11:01:46.766328Z",
-  "updated_at": "2016-04-20T11:01:46.766373Z",
+  "id": "7daeb459-d1b5-4353-aab4-738815ec409f",
+  "created_at": "2016-05-04T14:31:34.579262Z",
+  "updated_at": "2016-05-04T14:31:34.579313Z",
   "key": "client_id",
-  "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
+  "value_template": "{{env.client_id}}"
 }
 </code>
 </pre>
 <pre>
 <code class="http">
-POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/3f283422-eb63-4d61-82e3-6847fad38ec0/urlparams/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/fa00fc42-48f2-4668-a9b5-e37aceda26e1/urlparams/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_secret",
-    "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
+    "value_template": "{{env.client_secret}}"
     
 }
 </code>
@@ -1106,23 +1088,23 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "7d44c852-e4b2-446a-b889-328818e6067a",
-  "created_at": "2016-04-20T11:01:58.412589Z",
-  "updated_at": "2016-04-20T11:01:58.412632Z",
+  "id": "f17708d1-9113-41af-8ae5-045c0363ce89",
+  "created_at": "2016-05-04T14:31:46.424320Z",
+  "updated_at": "2016-05-04T14:31:46.424351Z",
   "key": "client_secret",
-  "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
+  "value_template": "{{env.client_secret}}"
 }
 </code>
 </pre>
 <pre>
 <code class="http">
-POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/3f283422-eb63-4d61-82e3-6847fad38ec0/urlparams/ HTTP/1.1
+POST /api/v1/bots/799e96f2-93eb-44eb-918c-c5bd14560c54/handlers/fa00fc42-48f2-4668-a9b5-e37aceda26e1/urlparams/ HTTP/1.1
 Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_id",
-    "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
+    "value_template": "{{env.client_id}}"
     
 }
 </code>
@@ -1130,17 +1112,14 @@ Content-Type: application/json
 <pre>
 <code class="json">
 {
-  "id": "20332dba-e939-40c3-b7fe-4d3ff5608bf9",
-  "created_at": "2016-04-20T11:02:09.149707Z",
-  "updated_at": "2016-04-20T11:02:09.149750Z",
+  "id": "94b86a39-9c95-4b4a-91a2-9f422417a53c",
+  "created_at": "2016-05-04T14:31:59.334883Z",
+  "updated_at": "2016-05-04T14:31:59.334912Z",
   "key": "client_id",
-  "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
+  "value_template": "{{env.client_id}}"
 }
 </code>
 </pre>
-
-
-
 
 
 <section id="next-steps" class="heading-block page-section">
