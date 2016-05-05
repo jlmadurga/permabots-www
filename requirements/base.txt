@@ -48,4 +48,4 @@ celery==3.1.21
 
 # Your custom requirements go here
 django-rest-swagger==0.3.5
-microbot==1.7.2
+microbot==1.7.3
