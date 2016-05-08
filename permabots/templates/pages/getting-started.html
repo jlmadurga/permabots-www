@@ -73,7 +73,7 @@
 		<img class="leftmargin-sm bottommargin-sm" src="{% static "images/getting-started/messenger_demo.gif" %}">
 		<p>The tutorial assumes that you have:</p>
 		<ul class="iconlist leftmargin">
-			<li><i class="icon-ok-sign"></i>A <a href="https://telegram.org/">Telegram</a> and/or <a href="https://www.kik.com/">Kik</a>  and/or <a href="https://www.messenger.com/">>Facebook Messenger</a> account</li>
+			<li><i class="icon-ok-sign"></i>A <a href="https://telegram.org/">Telegram</a> and/or <a href="https://www.kik.com/">Kik</a>  and/or <a href="https://www.messenger.com/">Facebook Messenger</a> account</li>
 			<li><i class="icon-ok-sign"></i>Registered in <a href="{% url 'account_signup' %}">Permabots.com</a></li>
 		</ul>
 		<p>This tutorial uses the Permabots API, so you need to set API token in header, <code>Authentication: Token <i>api_token</i></code>. However you can fulfill all this tutorial with the web dashboard.</p>
@@ -121,7 +121,7 @@ Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-	"token": "193184132:AAH5EA8wdmUZ6YrKSldos8-3ruBmob-rT3U",
+	"token": "your_telegram_bot_token",
 	"enabled": true
 }	
 		</code>		
@@ -130,7 +130,7 @@ Content-Type: application/json
 	<code class="json">
 {
 "id": "92a0e12c-9512-4aae-a4e6-2ebeb3fb3328",
-"token": "193184132:AAH5EA8wdmUZ6YrKSldos8-3ruBmob-rT3U",
+"token": ""your_telegram_bot_token",
 "created_at": "2016-04-20T10:49:57.295249Z",
 "updated_at": "2016-04-20T10:49:57.295303Z",
 "enabled": true,
@@ -153,7 +153,7 @@ Host: www.permabots.com
 Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
-	"api_key": "59bdd0c2-c3f0-48ee-8dc4-2c048480fe68",
+	"api_key": "your_kik_api_key",
 	"username": "permagithubtutorial",
 	"enabled": true
 }
@@ -165,7 +165,7 @@ Content-Type: application/json
 	<code class="json">
 {
 	"id": "8e51a392-c464-4225-99e7-ff3d1189ec34",
-	"api_key": "59bdd0c2-c3f0-48ee-8dc4-2c048480fe68",
+	"api_key": "your_kik_api_key",
 	"created_at": "2016-04-20T10:50:23.252650Z",
 	"updated_at": "2016-04-20T10:50:23.252683Z",
 	"enabled": true,
@@ -268,11 +268,11 @@ Content-Type: application/json
 {
   "name": "Username",
   "enabled": true,
-  "pattern": "(?P<username>\\w+)",
-  "request": {"url_template": "https://api.github.com/users/{{pattern.username }}",
+  "pattern": "(?P&lt;username&gt;\\w+)",
+  "request": {"url_template": "https://api.github.com/users/{% verbatim %}{{pattern.username }}{% endverbatim %}",
               "method": "Get"},
-  "response": {"text_template": "{% if response.status == 404 %}{{ pattern.username }} not found {{ emoji.black_question_mark_ornament}} Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url }}{% endif %}{% endif %} it has {{ response.data.public_repos }} public repos {{ emoji.public_address_loudspeaker }} and {{ response.data.followers}} followers {{ emoji.family}} \\n View repos or go back",
-               "keyboard_template": "{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}"
+  "response": {"text_template": "{% verbatim %}{% if response.status == 404 %}{{ pattern.username }} not found {{ emoji.black_question_mark_ornament}} Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url }}{% endif %}{% endif %} it has {{ response.data.public_repos }} public repos {{ emoji.public_address_loudspeaker }} and {{ response.data.followers}} followers {{ emoji.family}} \\n View repos or go back{% endverbatim %}",
+               "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}{% endverbatim %}"
                }
 
 }
@@ -285,18 +285,18 @@ Content-Type: application/json
   "created_at": "2016-05-04T14:22:38.264460Z",
   "updated_at": "2016-05-04T14:22:38.264492Z",
   "name": "Username",
-  "pattern": "(?P<username>\\w+)",
+  "pattern": "(?P&lt;username&gt;\\w+)",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/users/{{pattern.username }}",
+    "url_template": "https://api.github.com/users/{% verbatim %}{{pattern.username }}{% endverbatim %}",
     "method": "Get",
     "data": null,
     "url_parameters": [],
     "header_parameters": []
   },
   "response": {
-    "text_template": "{% if response.status == 404 %}{{ pattern.username }} not found {{ emoji.black_question_mark_ornament}} Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url }}{% endif %}{% endif %} it has {{ response.data.public_repos }} public repos {{ emoji.public_address_loudspeaker }} and {{ response.data.followers}} followers {{ emoji.family}} \\n View repos or go back",
-    "keyboard_template": "{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}"
+    "text_template": "{% verbatim %}{% if response.status == 404 %}{{ pattern.username }} not found {{ emoji.black_question_mark_ornament}} Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url }}{% endif %}{% endif %} it has {{ response.data.public_repos }} public repos {{ emoji.public_address_loudspeaker }} and {{ response.data.followers}} followers {{ emoji.family}} \\n View repos or go back{% endverbatim %}",
+    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}{% endverbatim %}"
   },
   "target_state": null,
   "source_states": [],
@@ -438,7 +438,7 @@ Content-Type: application/json
   "enabled": true,
   "request": null,
   "response": {
-    "text_template": "Wellcome to PermaGithub Tutorial bot {{ emoji.waving_hand_sign}} \\n Which github username do you want me to look for?",
+    "text_template": "{% verbatim %}Wellcome to PermaGithub Tutorial bot {{ emoji.waving_hand_sign}} \\n Which github username do you want me to look for?{% endverbatim %}",
     "keyboard_template": ""
   },
   "target_state": {
@@ -473,18 +473,18 @@ Content-Type: application/json
   "created_at": "2016-05-04T14:22:38.264460Z",
   "updated_at": "2016-05-04T14:24:35.748834Z",
   "name": "Username",
-  "pattern": "(?P<username>\\w+)",
+  "pattern": "(?P&lt;username&gt;\\w+)",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/users/{{pattern.username }}",
+    "url_template": "https://api.github.com/users/{% verbatim %}{{pattern.username }}{% endverbatim %}",
     "method": "Get",
     "data": null,
     "url_parameters": [],
     "header_parameters": []
   },
   "response": {
-    "text_template": "{% if response.status == 404 %}{{ pattern.username }} not found {{ emoji.black_question_mark_ornament}} Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url }}{% endif %}{% endif %} it has {{ response.data.public_repos }} public repos {{ emoji.public_address_loudspeaker }} and {{ response.data.followers}} followers {{ emoji.family}} \\n View repos or go back",
-    "keyboard_template": "{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}"
+    "text_template": "{% verbatim %}{% if response.status == 404 %}{{ pattern.username }} not found {{ emoji.black_question_mark_ornament}} Try with another one.{% else %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url }}{% endif %}{% endif %} it has {{ response.data.public_repos }} public repos {{ emoji.public_address_loudspeaker }} and {{ response.data.followers}} followers {{ emoji.family}} \\n View repos or go back{% endverbatim %}",
+    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}{% endverbatim %}"
   },
   "target_state": {
     "id": "dfdab2ff-d50c-4d6f-8e47-fc4ab5399559",
@@ -539,9 +539,9 @@ Content-Type: application/json
     "name": "Repos",
     "enabled": true,
     "pattern": "Repos",
-    "request": {"url_template": "https://api.github.com/users/{{state_context.username.pattern.username}}/repos", "method": "Get"},
+    "request": {"url_template": "{% verbatim %}https://api.github.com/users/{{state_context.username.pattern.username}}/repos", "method": "Get"}{% endverbatim %},
     "response": {"text_template": "Select a repository",
-                 "keyboard_template": "[['Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]"
+                 "keyboard_template": "{% verbatim %}[['Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
     },
     "target_state": {"name": "Repo"}
     
@@ -559,7 +559,7 @@ Content-Type: application/json
   "pattern": "Repos",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/users/{{state_context.username.pattern.username}}/repos",
+    "url_template": "{% verbatim %}https://api.github.com/users/{{state_context.username.pattern.username}}/repos{% endverbatim %}",
     "method": "Get",
     "data": null,
     "url_parameters": [],
@@ -567,7 +567,7 @@ Content-Type: application/json
   },
   "response": {
     "text_template": "Select a repository",
-    "keyboard_template": "[['Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]"
+    "keyboard_template": "{% verbatim %}[['Back']{% for repo in response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
   },
   "target_state": {
     "id": "fce06ff0-889f-400c-a01a-99f90c9f48be",
@@ -682,11 +682,11 @@ Content-Type: application/json
 {
     "name": "Repo Detail",
     "enabled": true,
-    "pattern": "(?P<repo>.+)",
-    "request": {"url_template": "https://api.github.com/repos/{{state_context.username.pattern.username}}/{{ pattern.repo }}",
+    "pattern": "(?P&lt;repo&gt;.+)",
+    "request": {"url_template": "{% verbatim %}https://api.github.com/repos/{{state_context.username.pattern.username}}/{{ pattern.repo }}{% endverbatim %}",
                 "method": "Get"},
-    "response": {"text_template": "{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found {{ emoji.cross_mark}}\\n Select one from menu{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>: {{ response.data.description}}{% else %} {{ response.data.name}} with url {{response.data.html_url }}: {{ response.data.description }}{% endif %}\\n Select repo or go back{% endif %}",
-                 "keyboard_template": "[['Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]"
+    "response": {"text_template": "{% verbatim %}{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found {{ emoji.cross_mark}}\\n Select one from menu{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>: {{ response.data.description}}{% else %} {{ response.data.name}} with url {{response.data.html_url }}: {{ response.data.description }}{% endif %}\\n Select repo or go back{% endif %}{% endverbatim %}",
+                 "keyboard_template": "{% verbatim %}[['Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
     }
 }
 </code>
@@ -703,15 +703,15 @@ Content-Type: application/json
   "pattern": "(?P<repo>.+)",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/repos/{{state_context.username.pattern.username}}/{{ pattern.repo }}",
+    "url_template": "{% verbatim %}https://api.github.com/repos/{{state_context.username.pattern.username}}/{{ pattern.repo }}{% endverbatim %}",
     "method": "Get",
     "data": null,
     "url_parameters": [],
     "header_parameters": []
   },
   "response": {
-    "text_template": "{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found {{ emoji.cross_mark}}\\n Select one from menu{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>: {{ response.data.description}}{% else %} {{ response.data.name}} with url {{response.data.html_url }}: {{ response.data.description }}{% endif %}\\n Select repo or go back{% endif %}",
-    "keyboard_template": "[['Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]"
+    "text_template": "{% verbatim %}{% if response.status == 404 %} Repository {{ pattern.repo }} from {{ pattern.username}} not found {{ emoji.cross_mark}}\\n Select one from menu{% else %} {% if service == 'telegram' %} <a href='{{ response.data.html_url}}'>{{ response.data.name }}</a>: {{ response.data.description}}{% else %} {{ response.data.name}} with url {{response.data.html_url }}: {{ response.data.description }}{% endif %}\\n Select repo or go back{% endif %}{% endverbatim %}",
+    "keyboard_template": "{% verbatim %}[['Back']{% for repo in state_context.user_detail.response.data %}{% if loop.first %},{% endif %}['{{repo.name}}']{% if not loop.last %},{% endif %}{% endfor%}]{% endverbatim %}"
   },
   "target_state": null,
   "source_states": [],
@@ -756,10 +756,10 @@ Content-Type: application/json
     "name": "Back from Repo Detail",
     "enabled": true,
     "pattern": "Back",
-    "request": {"url_template": "https://api.github.com/users/{{ state_context.username.pattern.username}}",
+    "request": {"url_template": "{% verbatim %}https://api.github.com/users/{{ state_context.username.pattern.username}}{% endverbatim %}",
                 "method": "Get"},
-    "response": {"text_template": "{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url}}{% endif %} it has {{ response.data.public_repos }} public repos and {{ response.data.followers}} followers\\n View repos or go back",
-                 "keyboard_template": "{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}"
+    "response": {"text_template": "{% verbatim %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url}}{% endif %} it has {{ response.data.public_repos }} public repos and {{ response.data.followers}} followers\\n View repos or go back{% endverbatim %}",
+                 "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}{% endverbatim %}"
     },
     "target_state": {"name": "User Detail"},
     "priority": 1,
@@ -777,15 +777,15 @@ Content-Type: application/json
   "pattern": "Back",
   "enabled": true,
   "request": {
-    "url_template": "https://api.github.com/users/{{ state_context.username.pattern.username}}",
+    "url_template": "{% verbatim %}https://api.github.com/users/{{ state_context.username.pattern.username}}{% endverbatim %}",
     "method": "Get",
     "data": null,
     "url_parameters": [],
     "header_parameters": []
   },
   "response": {
-    "text_template": "{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url}}{% endif %} it has {{ response.data.public_repos }} public repos and {{ response.data.followers}} followers\\n View repos or go back",
-    "keyboard_template": "{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}"
+    "text_template": "{% verbatim %}{% if service == 'telegram' %}<a href='{{ response.data.html_url}}'>{{ response.data.login }}</a>{% else %}{{ response.data.login }} with url {{ response.data.html_url}}{% endif %} it has {{ response.data.public_repos }} public repos and {{ response.data.followers}} followers\\n View repos or go back{% endverbatim %}",
+    "keyboard_template": "{% verbatim %}{% if response.status == 200 %}[['Repos'],['Back']]{% endif %}{% endverbatim %}"
   },
   "target_state": {
     "id": "dfdab2ff-d50c-4d6f-8e47-fc4ab5399559",
@@ -824,40 +824,7 @@ Content-Type: application/json
 </code>
 </pre>
 <p>Notice how we set priority to this handler ir order to avoid collisions. Otherwise it will take "Back" as parameter to look for repository details.</p>
-<div class="row bottommargin">
-<div class="col-sm-3">
-<div class="thumbnail">
-	<img src="{% static "images/getting-started/telegram_github_repository_detail.jpg" %}" alt="Telegram repository Github detail">
-				<div class="caption">
-	<i>Telegram showing Repository details</i>
-	</div>
-	</div>
-</div>
-<div class="col-sm-3">
-<div class="thumbnail">
-	<img src="{% static "images/getting-started/telegram_github_repository_back.jpg" %}" alt="Telegram repository Github back">
-				<div class="caption">
-	<i>Telegram after going Back</i>
-	</div>
-	</div>
-</div>
-<div class="col-sm-3">
-<div class="thumbnail">
-	<img src="{% static "images/getting-started/kik_github_repository_detail.jpg" %}" alt="Kik repository Github detail">
-				<div class="caption">
-	<i>Kik showing Repository details</i>
-	</div>
-	</div>
-</div>
-<div class="col-sm-3">
-<div class="thumbnail">
-	<img src="{% static "images/getting-started/kik_github_repository_back.jpg" %}" alt="Kik repository Github back">
-				<div class="caption">
-	<i>Kik after going Back</i>
-	</div>
-	</div>
-</div>
-</div>
+
 
 <section id="environment" class="heading-block page-section">
 		<div class="fancy-title title-border">
@@ -936,7 +903,7 @@ Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_secret",
-    "value_template": "{{env.client_secret}}"
+    "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
     
 }
 </code>
@@ -948,7 +915,7 @@ Content-Type: application/json
   "created_at": "2016-05-04T14:30:30.780113Z",
   "updated_at": "2016-05-04T14:30:30.780167Z",
   "key": "client_secret",
-  "value_template": "{{env.client_secret}}"
+  "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
 }
 </code>
 </pre>
@@ -960,7 +927,7 @@ Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_id",
-    "value_template": "{{env.client_id}}"
+    "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
     
 }
 </code>
@@ -972,7 +939,7 @@ Content-Type: application/json
   "created_at": "2016-05-04T14:30:46.335365Z",
   "updated_at": "2016-05-04T14:30:46.335395Z",
   "key": "client_id",
-  "value_template": "{{env.client_id}}"
+  "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
 }
 </code>
 </pre>
@@ -984,7 +951,7 @@ Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_secret",
-    "value_template": "{{env.client_secret}}"
+    "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
     
 }
 </code>
@@ -996,7 +963,7 @@ Content-Type: application/json
   "created_at": "2016-05-04T14:31:01.181979Z",
   "updated_at": "2016-05-04T14:31:01.182008Z",
   "key": "client_secret",
-  "value_template": "{{env.client_secret}}"
+  "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
 }
 </code>
 </pre>
@@ -1008,7 +975,7 @@ Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_id",
-    "value_template": "{{env.client_id}}"
+    "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
     
 }
 </code>
@@ -1020,7 +987,7 @@ Content-Type: application/json
   "created_at": "2016-05-04T14:31:12.475815Z",
   "updated_at": "2016-05-04T14:31:12.475866Z",
   "key": "client_id",
-  "value_template": "{{env.client_id}}"
+  "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
 }
 </code>
 </pre>
@@ -1032,7 +999,7 @@ Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_secret",
-    "value_template": "{{env.client_secret}}"
+    "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
     
 }
 </code>
@@ -1044,7 +1011,7 @@ Content-Type: application/json
   "created_at": "2016-05-04T14:31:22.401526Z",
   "updated_at": "2016-05-04T14:31:22.401556Z",
   "key": "client_secret",
-  "value_template": "{{env.client_secret}}"
+  "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
 }
 </code>
 </pre>
@@ -1056,7 +1023,7 @@ Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_id",
-    "value_template": "{{env.client_id}}"
+    "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
     
 }
 </code>
@@ -1068,7 +1035,7 @@ Content-Type: application/json
   "created_at": "2016-05-04T14:31:34.579262Z",
   "updated_at": "2016-05-04T14:31:34.579313Z",
   "key": "client_id",
-  "value_template": "{{env.client_id}}"
+  "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
 }
 </code>
 </pre>
@@ -1080,7 +1047,7 @@ Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_secret",
-    "value_template": "{{env.client_secret}}"
+    "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
     
 }
 </code>
@@ -1092,7 +1059,7 @@ Content-Type: application/json
   "created_at": "2016-05-04T14:31:46.424320Z",
   "updated_at": "2016-05-04T14:31:46.424351Z",
   "key": "client_secret",
-  "value_template": "{{env.client_secret}}"
+  "value_template": "{% verbatim %}{{env.client_secret}}{% endverbatim %}"
 }
 </code>
 </pre>
@@ -1104,7 +1071,7 @@ Authorization: Token yourpermabotstoken
 Content-Type: application/json
 {
     "key": "client_id",
-    "value_template": "{{env.client_id}}"
+    "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
     
 }
 </code>
@@ -1116,7 +1083,7 @@ Content-Type: application/json
   "created_at": "2016-05-04T14:31:59.334883Z",
   "updated_at": "2016-05-04T14:31:59.334912Z",
   "key": "client_id",
-  "value_template": "{{env.client_id}}"
+  "value_template": "{% verbatim %}{{env.client_id}}{% endverbatim %}"
 }
 </code>
 </pre>
