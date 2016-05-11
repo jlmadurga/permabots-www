@@ -22,12 +22,15 @@
 
 				<div class="full-screen dark section nopadding nomargin noborder ohidden" style="background-image: url('{% static "images/stefano_dark.jpg" %}'); background-size: cover; background-position: center center;">
 				
-
+					
 
 					<div class="row nomargin" style="position: relative; z-index: 2;">
 						<div class="col-md-6 slider-caption slider-caption-center">
 									<h1 data-caption-animate="fadeInUp">Connect chatbots to apps</h1>
 									<p data-caption-animate="fadeInUp" data-caption-delay="200">Build chabots and connect to webservices for free.</p>
+									<img src={% static "images/demo.gif" %}>
+										
+									
 						</div>
 						<div class="col-md-offset-1 col-md-5 full-screen" style="background-color: rgba(0,0,0,0.45);">
 
@@ -35,7 +38,7 @@
 							<div class="vertical-middle col-padding">
 								<div class="heading-block nobottomborder bottommargin-sm">
 									<h1 style="font-size: 22px;">Start creating bots</h1>
-									<span style="font-size: 16px;" class="t300 capitalize ls1 notopmargin">A bot for Telegram/Kik/Facebook Messenger within 5 minutes.</span>
+									<span style="font-size: 16px;" class="t300 capitalize ls1 notopmargin">A bot for Telegram <img src="{% static "images/services/telegram_logo.png" %}" alt="Telegram" height="20" width="20">, Kik <img src="{% static "images/services/kik_logo.png" %}" alt="Kik" height="24" width="24"></a> and Messenger <img src="{% static "images/services/facebook_messenger_logo.png" %}" alt="Facebook Messenger" height="24" width="24"> within 5 minutes.</span>
 								</div>
 								<form action="{% url 'account_signup' %}" method="post" class="clearfix" style="max-width: 300px;">
 								{% csrf_token %}
