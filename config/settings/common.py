@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Django settings for permabots project.
+Django settings for permabots_www project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/dev/topics/settings/
@@ -13,7 +13,7 @@ from __future__ import absolute_import, unicode_literals
 import environ
 
 ROOT_DIR = environ.Path(__file__) - 3  # (/a/b/myfile.py - 3 = /)
-APPS_DIR = ROOT_DIR.path('permabots')
+APPS_DIR = ROOT_DIR.path('permabots_www')
 
 env = environ.Env()
 
@@ -48,7 +48,7 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
-    'permabots.users',  # custom users app
+    'permabots_www.users',  # custom users app
     # Your stuff: custom apps go here
     'microbot',
 )
@@ -71,7 +71,7 @@ MIDDLEWARE_CLASSES = (
 # MIGRATIONS CONFIGURATION
 # ------------------------------------------------------------------------------
 MIGRATION_MODULES = {
-    'sites': 'permabots.contrib.sites.migrations'
+    'sites': 'permabots_www.contrib.sites.migrations'
 }
 
 # DEBUG
@@ -220,8 +220,8 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_USERNAME_REQUIRED = False
 
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
-ACCOUNT_ADAPTER = 'permabots.users.adapters.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'permabots.users.adapters.SocialAccountAdapter'
+ACCOUNT_ADAPTER = 'permabots_www.users.adapters.AccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'permabots_www.users.adapters.SocialAccountAdapter'
 SOCIALACCOUNT_QUERY_EMAIL = False
 # Custom user app defaults
 # Select the correct user model
@@ -233,7 +233,7 @@ LOGIN_URL = 'account_login'
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
 # CELERY
-INSTALLED_APPS += ('permabots.taskapp.celery.CeleryConfig',)
+INSTALLED_APPS += ('permabots_www.taskapp.celery.CeleryConfig',)
 # if you are not using the django database broker (e.g. rabbitmq, redis, memcached), you can remove the next line.
 INSTALLED_APPS += ('kombu.transport.django',)
 BROKER_URL = env("CELERY_BROKER_URL", default='django://')

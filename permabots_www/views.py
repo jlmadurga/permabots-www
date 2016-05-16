@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
-from permabots import forms
+from permabots_www import forms
 from django.http import Http404
 
 
