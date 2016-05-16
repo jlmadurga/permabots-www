@@ -15,7 +15,7 @@ app = Celery('permabots')
 
 
 class CeleryConfig(AppConfig):
-    name = 'permabots.taskapp'
+    name = 'permabots_www.taskapp'
     verbose_name = 'Celery Config'
 
     def ready(self):

@@ -1,5 +1,5 @@
 [run]
-include = permabots/*
+include = permabots_www/*
 omit = *migrations*, *tests*
 plugins =
     django_coverage_plugin

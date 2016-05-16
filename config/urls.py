@@ -7,8 +7,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
-from permabots import views
-from permabots.sitemaps import sitemaps
+from permabots_www import views
+from permabots_www.sitemaps import sitemaps
 from django.contrib.sitemaps.views import sitemap
 
 def uuidzy(url):
@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
     # User management
-    url(r'^users/', include("permabots.users.urls", namespace="users")),
+    url(r'^users/', include("permabots_www.users.urls", namespace="users")),
     url(r'^accounts/', include('allauth.urls')),
     # Your stuff: custom urls includes go here
     url(r'^processing/', include('microbot.urls_processing', namespace="microbot")),
