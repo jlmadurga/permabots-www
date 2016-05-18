@@ -1,10 +1,10 @@
 from django.test import RequestFactory
 from test_plus.test import TestCase
-from microbot.test.factories import BotFactory, HandlerFactory, HookFactory, UrlParamFactory, \
+from permabots.test.factories import BotFactory, HandlerFactory, HookFactory, UrlParamFactory, \
     HeaderParamFactory, TelegramRecipientFactory, StateFactory, KikRecipientFactory, MessengerRecipientFactory
-from microbot.models import (EnvironmentVar, Bot, Handler, Hook, UrlParam, HeaderParam, TelegramRecipient, State,  
-                             TelegramBot, KikBot, KikRecipient, MessengerBot, MessengerRecipient)
-from microbot.models import TelegramUser as UserAPI
+from permabots.models import (EnvironmentVar, Bot, Handler, Hook, UrlParam, HeaderParam, TelegramRecipient, State,  
+                              TelegramBot, KikBot, KikRecipient, MessengerBot, MessengerRecipient)
+from permabots.models import TelegramUser as UserAPI
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from django_webtest import WebTest

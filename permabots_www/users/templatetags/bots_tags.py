@@ -1,5 +1,5 @@
 from django import template
-from microbot.models import Bot
+from permabots.models import Bot
 
 register = template.Library()
 

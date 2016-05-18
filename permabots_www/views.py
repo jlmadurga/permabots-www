@@ -1,4 +1,4 @@
-from microbot.models import Bot, Handler, Hook, EnvironmentVar, Request, Response, UrlParam, HeaderParam, TelegramRecipient, \
+from permabots.models import Bot, Handler, Hook, EnvironmentVar, Request, Response, UrlParam, HeaderParam, TelegramRecipient, \
     State, TelegramBot, KikBot, KikRecipient, MessengerBot, MessengerRecipient
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic

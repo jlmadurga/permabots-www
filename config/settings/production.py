@@ -192,12 +192,12 @@ LOGGING = {
             'handlers': ['console', 'mail_admins'],
             'propagate': True
         },
-        'microbot': {
+        'permabots': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
         },
-        'microbot': {
+        'permabots': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
