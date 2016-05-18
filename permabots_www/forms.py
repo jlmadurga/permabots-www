@@ -1,10 +1,10 @@
 from django import forms
-from microbot.models import (Bot, Handler, Hook, Request, EnvironmentVar, UrlParam, HeaderParam, TelegramRecipient, 
-                             State, TelegramBot, KikBot, KikRecipient, MessengerBot, MessengerRecipient)
+from permabots.models import (Bot, Handler, Hook, Request, EnvironmentVar, UrlParam, HeaderParam, TelegramRecipient, 
+                              State, TelegramBot, KikBot, KikRecipient, MessengerBot, MessengerRecipient)
 from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, HTML
-from microbot import validators
+from permabots import validators
 
 
 class BaseCrispyForm(forms.ModelForm):

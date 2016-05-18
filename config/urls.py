@@ -26,8 +26,8 @@ urlpatterns = [
     url(r'^users/', include("permabots_www.users.urls", namespace="users")),
     url(r'^accounts/', include('allauth.urls')),
     # Your stuff: custom urls includes go here
-    url(r'^processing/', include('microbot.urls_processing', namespace="microbot")),
-    url(r'^api/v1/', include('microbot.urls_api', namespace="api")),
+    url(r'^processing/', include('permabots.urls_processing', namespace="permabots")),
+    url(r'^api/v1/', include('permabots.urls_api', namespace="api")),
     url(r'^privacy-policy/$', TemplateView.as_view(template_name='pages/privacy_policy.html'), name="privacy-policy"),
     url(r'^docs/getting-started$', TemplateView.as_view(template_name='pages/getting-started.html'), name="getting-started"),
     url(r'^docs/api/', include('rest_framework_swagger.urls', namespace="swagger")),

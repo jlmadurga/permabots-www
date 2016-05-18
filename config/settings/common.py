@@ -50,7 +50,7 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     'permabots_www.users',  # custom users app
     # Your stuff: custom apps go here
-    'microbot',
+    'permabots',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -282,7 +282,7 @@ LOGGING = {
             'handlers': ['console', 'mail_admins'],
             'propagate': True
         },
-        'microbot': {
+        'permabots': {
             'level': 'DEBUG',
             'handlers': ['console'],
             'propagate': True              
@@ -292,7 +292,7 @@ LOGGING = {
 CRISPY_FAIL_SILENTLY = not DEBUG
 
 SWAGGER_SETTINGS = {
-    'exclude_namespaces': ['microbot'],
+    'exclude_namespaces': ['permabots'],
     'info': {
         'description': 'Permabots API works with Authorization header. '
                        'All requests should have HTTP Token Authorization header in the form of:'
